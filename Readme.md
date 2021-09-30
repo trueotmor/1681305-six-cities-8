@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Sasha Proskurin](https://up.htmlacademy.ru/react/8/user/1681305).
-* Наставник: `Неизвестно`.
+* Наставник: [Евгений Фаллер](https://up.htmlacademy.ru/react/8/user/505933).
 
 ---
 

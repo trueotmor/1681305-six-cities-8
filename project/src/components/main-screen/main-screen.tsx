@@ -2,7 +2,6 @@ import HeaderComponent from '../header-component/header-component';
 import MainTabsComponent from './main-tabs-component';
 import PlaceCardComponent from './place-card-component';
 
-
 type MainScreenProps = {
   placesCount : number;
 }

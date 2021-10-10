@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './components/app/app';
 
 const Setting = {
-  PLACES_COUNT : NaN,
+  PLACES_COUNT : 321,
 };
 
 ReactDOM.render(

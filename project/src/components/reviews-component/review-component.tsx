@@ -1,4 +1,4 @@
-import {CommentGet} from '../../types/comment-get';
+import { CommentGet } from '../../types/comment-get';
 
 type ReviewComponentProps = {
   review : CommentGet;

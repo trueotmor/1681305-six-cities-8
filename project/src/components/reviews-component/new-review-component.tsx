@@ -1,29 +1,31 @@
-import {useState, ChangeEvent, FormEvent} from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import StarsInputComponent from './stars-input-component';
-import {STARS} from '../../consts';
+import { STARS } from '../../consts';
 
 type NewReviewComponentProps = {
-  onComment : (starsState : [number, React.Dispatch<React.SetStateAction<number>>], userText : string)=> void;
+  onComment : (userSelect : number, userText : string)=> void;
 }
 
 function NewReviewComponent({onComment}:NewReviewComponentProps): JSX.Element {
   const [userText, setUserText] = useState('');
-  const starsState = useState(0);
-  const disabled = userText === '' && starsState[0] === 0;
-
+  const [userSelect, setUserSelect] = useState<number>(0);
+  const disabled = userText === '' || userSelect === 0;
+  const onChange = ({target} : ChangeEvent<HTMLInputElement>) => {
+    setUserSelect(+target.value);};
   return (
     <form className="reviews__form form" action="#" method="post"
       onSubmit={(evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
-        onComment(starsState, userText);
+        onComment(userSelect, userText);
       }}
     >
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
       <div className="reviews__rating-form form__rating">
         {new Array(STARS).fill(0).map((count, id) => {
           const keyValue = `${id}-${id}`;
+          const checked = userSelect === STARS - id;
           return (
-            <StarsInputComponent key = {keyValue} count = {STARS - id} state = {starsState}/>
+            <StarsInputComponent key = {keyValue} count = {STARS - id} checked = {checked} onChange = {onChange}/>
           );
         })}
       </div>

@@ -1,7 +1,7 @@
 import FavoritesFooterComponent from './favorites-footer-component';
 import FavoritesItemComponent from './favorites-item';
 import HeaderComponent from '../header-component/header-component';
-import {Offer} from '../../types/offer';
+import { Offer } from '../../types/offer';
 
 type FavoritesScreenProps = {
   offers : Offer[];

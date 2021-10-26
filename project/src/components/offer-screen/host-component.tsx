@@ -1,4 +1,4 @@
-import {Offer} from '../../types/offer';
+import { Offer } from '../../types/offer';
 
 type HostComponentProps = {
   host : Offer['host'];
@@ -10,17 +10,10 @@ function HostComponent({host, description} : HostComponentProps): JSX.Element {
   const pro = isPro ? <span className="property__user-status">Pro</span> : <span></span>;
   const isProAvatar = () => {
     const avatar = <img className="property__avatar user__avatar" src={avatarUrl} width="74" height="74" alt="Host avatar"/>;
-    if (isPro) {
-      return (
-        <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
-          {avatar}
-        </div>);
-    }
-    return (
-      <div className="property__avatar-wrapper user__avatar-wrapper">
-        {avatar}
-      </div>
-    );
+    const proAvatar = isPro ?
+      <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">{avatar}</div> :
+      <div className="property__avatar-wrapper user__avatar-wrapper">{avatar}</div>;
+    return proAvatar;
   };
   return (
     <div className="property__host">

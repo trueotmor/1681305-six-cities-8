@@ -1,15 +1,20 @@
+import {useState } from 'react';
 import HeaderComponent from '../header-component/header-component';
 import MainTabsComponent from './main-tabs-component';
 import CardListComponent from './cards-list-component';
 
-import {Offer} from '../../types/offer';
-
+import { Offer } from '../../types/offer';
+import Map from '../map-component/map-component';
 
 type MainScreenProps = {
   offers : Offer[];
 }
 
 function MainScreen({offers}: MainScreenProps): JSX.Element {
+  const [selectedPoint, setSelectedPoint] = useState<string | undefined>(undefined);
+  function updateData (value : string) {
+    return setSelectedPoint(value);
+  }
   return (
     <div className="page page--gray page--main">
       <HeaderComponent/>
@@ -37,10 +42,12 @@ function MainScreen({offers}: MainScreenProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <CardListComponent offers = {offers}/>
+              <CardListComponent offers = {offers} updateData = {updateData}/>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <section className="cities__map map">
+                <Map offers = {offers} selectedPoint = {selectedPoint}/>
+              </section>
             </div>
           </div>
         </div>

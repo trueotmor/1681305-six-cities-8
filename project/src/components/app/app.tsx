@@ -26,7 +26,7 @@ function App({offers, reviews}:AppScreenProps): JSX.Element {
         </Route>
         <PrivateRoute path={AppRoute.Favorites} exact render={()=> <FavoritesScreen offers = {offers}/>} authorizationStatus={AuthorizationStatus.Auth}/>
         <Route path={AppRoute.Room} exact>
-          <OfferScreen offer = {offer} offers = {offers} reviews = {reviews} onComment={() => {
+          <OfferScreen offer = {offer} reviews = {reviews} onComment={() => {
             throw new Error('Function \'onAnswer\' isn\'t implemented.');
           }}
           />

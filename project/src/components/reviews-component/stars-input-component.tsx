@@ -1,10 +1,12 @@
+import { ChangeEventHandler } from 'react';
+
 type StarsInputComponentProps = {
-  count : number
-  state : [number, React.Dispatch<React.SetStateAction<number>>]
+  count : number;
+  checked : boolean;
+  onChange : ChangeEventHandler<HTMLInputElement>;
 }
 
-function StarsInputComponent({count, state} : StarsInputComponentProps): JSX.Element {
-  const [userSelect, setUserSelect] = state;
+function StarsInputComponent({count, checked, onChange} : StarsInputComponentProps): JSX.Element {
   return (
     <>
       <input className="form__rating-input visually-hidden"
@@ -12,10 +14,8 @@ function StarsInputComponent({count, state} : StarsInputComponentProps): JSX.Ele
         value={`${count}`}
         id={`${count}-stars`}
         type="radio"
-        checked={userSelect === count}
-        onChange={() => {
-          setUserSelect(count);
-        }}
+        checked={checked}
+        onChange={onChange}
       />
       <label htmlFor={`${count}-stars`} className="reviews__rating-label form__rating-label" title="perfect">
         <svg className="form__star-image" width="37" height="33">

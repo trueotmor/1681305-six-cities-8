@@ -1,24 +1,38 @@
 import { Offer } from '../../types/offer';
 import HeaderComponent from '../header-component/header-component';
-import IsPremiumComponent from './ispremium-component';
+import IsPremiumComponent from '../premium-component/ispremium-component';
 import HostComponent from './host-component';
 import ReviewsComponent from '../reviews-component/reviews-component';
-import NearPlaceComponent from './near-places-component';
+import CardComponent from '../card-component/card-component';
 import { CommentGet } from '../../types/comment-get';
-import { getRndArr } from '../../utils/utils';
+import Map from '../map-component/map-component';
+import { useState } from 'react';
+import { getNearPlaces } from '../../mocks/near-places';
 
 type OfferScreenProps = {
   offer : Offer;
-  offers : Offer[];
   reviews : CommentGet[];
   onComment : () => void;
 }
 
-function OfferScreen({offer, offers, reviews, onComment}:OfferScreenProps): JSX.Element {
+const nearPlaces = getNearPlaces();
+
+function OfferScreen({offer, reviews, onComment}:OfferScreenProps): JSX.Element {
   const {isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description} = offer;
   const iconBookmark = isFavorite ? <use xlinkHref="#icon-bookmark" fill='#4481c3' stroke='#4481c3'></use> : <use xlinkHref="#icon-bookmark"fill='#ffffff' stroke='#b8b8b8'></use>;
   const ratingNumbers = (rating / 20).toFixed(1);
-  const nearPlaces = getRndArr([...offers], 3, 3);
+  const premiumComponentClass = 'property__mark';
+  const cardClass = {
+    articleClass : 'near-places__card',
+    imageWrapperClass : 'near-places__image-wrapper',
+    imageSize : {width : 260, height : 200},
+  };
+
+  const [selectedPoint, setSelectedPoint] = useState<string | undefined>(undefined);
+  function updateData (value : string) {
+    return setSelectedPoint(value);
+  }
+
   return (
     <div className="page">
       <HeaderComponent/>
@@ -39,7 +53,7 @@ function OfferScreen({offer, offers, reviews, onComment}:OfferScreenProps): JSX.
           </div>
           <div className="property__container container">
             <div className="property__wrapper">
-              <IsPremiumComponent isPremium = {isPremium}/>
+              <IsPremiumComponent isPremium = {isPremium} premiumComponentClass = {premiumComponentClass}/>
               <div className="property__name-wrapper">
                 <h1 className="property__name">
                   {title}
@@ -90,7 +104,9 @@ function OfferScreen({offer, offers, reviews, onComment}:OfferScreenProps): JSX.
               <ReviewsComponent reviews = {reviews} onComment = {onComment}/>
             </div>
           </div>
-          <section className="property__map map"></section>
+          <section className="property__map map">
+            <Map offers = {nearPlaces} selectedPoint = {selectedPoint}/>
+          </section>
         </section>
         <div className="container">
           <section className="near-places places">
@@ -99,7 +115,7 @@ function OfferScreen({offer, offers, reviews, onComment}:OfferScreenProps): JSX.
               { nearPlaces.map((item, id) => {
                 const keyValue = `${id} - ${item}`;
                 return (
-                  <NearPlaceComponent key = {keyValue} offer = {item} id = {id}/>
+                  <CardComponent key={keyValue} offer={item} cardClass={cardClass} updateData={updateData}/>
                 );
               })}
             </div>

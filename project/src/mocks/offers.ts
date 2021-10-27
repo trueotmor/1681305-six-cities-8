@@ -1,17 +1,19 @@
 import { Offer } from '../types/offer';
 import { getRandomInteger, getRandomElement, getRndArr, getRandomFloat, getBoolean } from '../utils/utils';
+import { nanoid } from 'nanoid';
 
-const MIN_LONGITUDE = -180;
-const MAX_LONGITUDE = 180;
 
-const MIN_LATITUDE = -90;
-const MAX_LATITUDE = 90;
+const MIN_LONGITUDE = 4.85;
+const MAX_LONGITUDE = 4.95;
+
+const MIN_LATITUDE = 52.35;
+const MAX_LATITUDE = 52.39;
 
 export const MIN_ID_RANGE = 1000;
 export const MAX_ID_RANGE = 9999;
 
-const MIN_ZOOM_RANGE = 0;
-const MAX_ZOOM_RANGE = 10;
+const MIN_ZOOM_RANGE = 12;
+const MAX_ZOOM_RANGE = 14;
 
 const MIN_PRICE = 101;
 const MAX_PRICE = 501;
@@ -31,7 +33,7 @@ const MAX_IMAGES = 6;
 const MIN_GOODS = 2;
 const MAX_GOODS = 6;
 
-const OFFERS_LENGHT = 10;
+const OFFERS_LENGHT = 5;
 
 const citys = new Set(['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf']);
 const getRandomCity = ():string => getRandomElement<string>(citys);
@@ -73,6 +75,7 @@ export const getOffers = () : Offer[] => {
   const offers : Offer[] = [];
   for (let actionIndex = 0; actionIndex < OFFERS_LENGHT; actionIndex++){
     const offer: Offer = {
+      uniqueOfferID : `${nanoid()}`,
       bedrooms : getRandomInteger(MIN_BEDROOMS, MAX_BEDROOMS),
       city : {
         location : {
@@ -97,7 +100,7 @@ export const getOffers = () : Offer[] => {
       location : {
         latitude : getRandomFloat(MIN_LATITUDE, MAX_LATITUDE),
         longitude : getRandomFloat(MIN_LONGITUDE, MAX_LONGITUDE),
-        zoom : getRandomInteger(),
+        zoom : getRandomInteger(MIN_ZOOM_RANGE, MAX_ZOOM_RANGE),
       },
       maxAdults : getRandomInteger(MIN_ADULTS, MAX_ADULTS),
       previewImage : getPreview(),

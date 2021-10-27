@@ -1,4 +1,4 @@
-import {CommentGet} from '../../types/comment-get';
+import { CommentGet } from '../../types/comment-get';
 import NewReviewComponent from './new-review-component';
 import ReviewComponent from './review-component';
 

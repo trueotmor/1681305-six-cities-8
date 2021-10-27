@@ -1,12 +1,18 @@
-import { Link } from 'react-router-dom';
-import {Offer} from '../../types/offer';
-import IsPremiumComponent from './ispremium-component';
+import { Offer } from '../../types/offer';
+import CardComponent from '../card-component/card-component';
+
 type FavoritesItemComponentProps = {
   offers : Offer[];
   city : string;
 }
 
 function FavoritesItemComponent({offers, city}: FavoritesItemComponentProps): JSX.Element {
+  const cardClass = {
+    articleClass : 'favorites__card',
+    imageWrapperClass : 'favorites__image-wrapper',
+    cardInfoCalss : 'favorites__card-info',
+    imageSize : {width : 150, height : 110},
+  };
 
   return (
     <li className="favorites__locations-items">
@@ -19,42 +25,9 @@ function FavoritesItemComponent({offers, city}: FavoritesItemComponentProps): JS
       </div>
       <div className="favorites__places">
         {offers.map((offer, id) => {
-          const {price, rating, type, title, previewImage, isFavorite, isPremium} = offer;
-          const iconBookmark = isFavorite ? <use xlinkHref="#icon-bookmark" fill='#4481c3' stroke='#4481c3'></use> : <use xlinkHref="#icon-bookmark" fill='#ffffff' stroke='#b8b8b8'></use>;
           const keyValue = `${id}-${offer}`;
           return (
-            <article key={keyValue} className="favorites__card place-card">
-              <IsPremiumComponent isPremium = {isPremium}/>
-              <div className="favorites__image-wrapper place-card__image-wrapper">
-                <Link to={`/offer/${id}`} >
-                  <img className="place-card__image" src={previewImage} width="150" height="110" alt="Place"/>
-                </Link>
-              </div>
-              <div className="favorites__card-info place-card__info">
-                <div className="place-card__price-wrapper">
-                  <div className="place-card__price">
-                    <b className="place-card__price-value">&euro;{price}</b>
-                    <span className="place-card__price-text">&#47;&nbsp;night</span>
-                  </div>
-                  <button className="place-card__bookmark-button place-card__bookmark-button--active button" type="button">
-                    <svg className="place-card__bookmark-icon" width="18" height="19">
-                      {iconBookmark}
-                    </svg>
-                    <span className="visually-hidden">In bookmarks</span>
-                  </button>
-                </div>
-                <div className="place-card__rating rating">
-                  <div className="place-card__stars rating__stars">
-                    <span style={{'width': `${rating}%`}}></span>
-                    <span className="visually-hidden">Rating</span>
-                  </div>
-                </div>
-                <h2 className="place-card__name">
-                  <Link to={`/offer/${id}`} >{title}</Link>
-                </h2>
-                <p className="place-card__type">{type}</p>
-              </div>
-            </article>
+            <CardComponent key={keyValue} offer={offer} cardClass={cardClass}/>
           );
         })}
       </div>

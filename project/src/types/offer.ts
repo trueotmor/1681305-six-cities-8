@@ -1,4 +1,5 @@
 export type Offer = {
+  uniqueOfferID : string;
   bedrooms : number;
   city : {
     location : {
@@ -20,7 +21,7 @@ export type Offer = {
   images : string[];
   isFavorite : boolean;
   isPremium : boolean;
-  location? : {
+  location : {
     latitude : number;
     longitude : number;
     zoom : number;

@@ -1,7 +1,7 @@
 export type CardClassProps = {
   articleClass : string;
   imageWrapperClass : string;
-  cardInfoCalss? : string;
+  cardInfoClass? : string;
   imageSize : {
     width : number, height : number};
 }

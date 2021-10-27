@@ -9,11 +9,21 @@ type ReviewsComponentProps = {
 }
 
 function ReviewsComponent({reviews, onComment}: ReviewsComponentProps): JSX.Element {
+  const sortedReviews = [...reviews].slice(0, 9).sort((b, a) => {
+    if (a.date > b.date) {
+      return 1;
+    }
+    if (a.date < b.date) {
+      return -1;
+    }
+    return 0;
+  });
+
   return (
     <section className="property__reviews reviews">
-      <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{reviews.length}</span></h2>
+      <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{sortedReviews.length}</span></h2>
       <ul className="reviews__list">
-        {reviews.map((review, id) => {
+        {sortedReviews.map((review, id) => {
           const keyValue = `${id} - ${review.id}`;
           return <ReviewComponent key = {keyValue} review = {review}/>;
         })}

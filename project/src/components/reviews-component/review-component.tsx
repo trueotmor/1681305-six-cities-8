@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { CommentGet } from '../../types/comment-get';
 
 type ReviewComponentProps = {
@@ -6,6 +7,7 @@ type ReviewComponentProps = {
 
 function ReviewComponent({review}: ReviewComponentProps): JSX.Element {
   const {comment, date, rating, user} = review;
+  const formattedDate = dayjs(date).format('MMMM YYYY');
   return (
     <li className="reviews__item">
       <div className="reviews__user user">
@@ -26,7 +28,7 @@ function ReviewComponent({review}: ReviewComponentProps): JSX.Element {
         <p className="reviews__text">
           {comment}
         </p>
-        <time className="reviews__time" dateTime={date}>{date}</time>
+        <time className="reviews__time" dateTime={date}>{formattedDate}</time>
       </div>
     </li>
 

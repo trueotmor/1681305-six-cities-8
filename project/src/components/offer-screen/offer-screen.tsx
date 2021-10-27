@@ -1,6 +1,5 @@
 import { Offer } from '../../types/offer';
 import HeaderComponent from '../header-component/header-component';
-import IsPremiumComponent from '../premium-component/ispremium-component';
 import HostComponent from './host-component';
 import ReviewsComponent from '../reviews-component/reviews-component';
 import CardComponent from '../card-component/card-component';
@@ -21,7 +20,6 @@ function OfferScreen({offer, reviews, onComment}:OfferScreenProps): JSX.Element 
   const {isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description} = offer;
   const iconBookmark = isFavorite ? <use xlinkHref="#icon-bookmark" fill='#4481c3' stroke='#4481c3'></use> : <use xlinkHref="#icon-bookmark"fill='#ffffff' stroke='#b8b8b8'></use>;
   const ratingNumbers = (rating / 20).toFixed(1);
-  const premiumComponentClass = 'property__mark';
   const cardClass = {
     articleClass : 'near-places__card',
     imageWrapperClass : 'near-places__image-wrapper',
@@ -53,7 +51,7 @@ function OfferScreen({offer, reviews, onComment}:OfferScreenProps): JSX.Element 
           </div>
           <div className="property__container container">
             <div className="property__wrapper">
-              <IsPremiumComponent isPremium = {isPremium} premiumComponentClass = {premiumComponentClass}/>
+              {isPremium && <div className="property__mark"><span>Premium</span></div>}
               <div className="property__name-wrapper">
                 <h1 className="property__name">
                   {title}

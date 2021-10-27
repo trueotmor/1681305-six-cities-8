@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Offer } from '../../types/offer';
 import { CardClassProps } from '../../types/card';
-import IsPremiumComponent from '../premium-component/ispremium-component';
 
 type PlaceCardProps = {
   offer : Offer;
@@ -12,9 +11,8 @@ type PlaceCardProps = {
 
 function CardComponent({offer, cardClass , updateData} : PlaceCardProps): JSX.Element {
   const {isPremium, price, title, type, previewImage, isFavorite, rating, uniqueOfferID} = offer;
-  const {articleClass, imageWrapperClass, cardInfoCalss, imageSize} = cardClass;
+  const {articleClass, imageWrapperClass, cardInfoClass, imageSize} = cardClass;
   const iconBookmark = isFavorite ? <use xlinkHref="#icon-bookmark" fill='#4481c3' stroke='#4481c3'></use> : <use xlinkHref="#icon-bookmark" fill='#ffffff' stroke='#b8b8b8'></use>;
-  const premiumComponentClass = 'place-card__mark';
   const [, setHover] = useState<string>('');
   const setState = (state : string) => {
     setHover(state);
@@ -32,13 +30,13 @@ function CardComponent({offer, cardClass , updateData} : PlaceCardProps): JSX.El
         setState('');
       }}
     >
-      <IsPremiumComponent isPremium = {isPremium} premiumComponentClass = {premiumComponentClass}/>
+      {isPremium && <div className="place-card__mark"><span>Premium</span></div>}
       <div className={`${imageWrapperClass} place-card__image-wrapper`}>
         <Link to={`/offer/${uniqueOfferID}`} >
           <img className="place-card__image" src={previewImage} width={+imageSize.width} height={+imageSize.height} alt="Place"/>
         </Link>
       </div>
-      <div className={`{${cardInfoCalss}}place-card__info`}>
+      <div className={`{${cardInfoClass}}place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{price}</b>

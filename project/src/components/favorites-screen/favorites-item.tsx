@@ -10,7 +10,7 @@ function FavoritesItemComponent({offers, city}: FavoritesItemComponentProps): JS
   const cardClass = {
     articleClass : 'favorites__card',
     imageWrapperClass : 'favorites__image-wrapper',
-    cardInfoCalss : 'favorites__card-info',
+    cardInfoClass : 'favorites__card-info',
     imageSize : {width : 150, height : 110},
   };
 

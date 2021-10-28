@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { CommentGet } from '../types/comment-get';
 import { getRandomInteger, getBoolean, getRandomElement, getRndArr } from '../utils/utils';
 import { getRandomName, getAvatarUrl } from './offers';
@@ -49,19 +48,6 @@ export const getComments = () : CommentGet[] => {
     };
     reviews.push(comment);
   }
-  const randomReviews = getRndArr(reviews, 5, 1).sort((a, b) => {
-    if (a.date > b.date) {
-      return 1;
-    }
-
-    if (a.date < b.date) {
-      return -1;
-    }
-
-    return 0;
-  });
-
-  randomReviews.forEach((review) => review.date = dayjs(review.date).format('MMMM YYYY'));
-
+  const randomReviews = getRndArr(reviews, 5, 1);
   return randomReviews;
 };

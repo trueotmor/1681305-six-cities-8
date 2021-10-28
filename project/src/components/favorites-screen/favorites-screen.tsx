@@ -18,7 +18,7 @@ function FavoritesScreen({offers} : FavoritesScreenProps): JSX.Element {
     return favorites;
   };
 
-  const getFavoritesCitys = () : Set<string> => {
+  const getFavoritesCities = () : Set<string> => {
     const favoritesCitys : Set<string> = new Set();
     getFavoritesOffers().forEach((offer)=>{
       favoritesCitys.add(offer.city.name);
@@ -29,13 +29,12 @@ function FavoritesScreen({offers} : FavoritesScreenProps): JSX.Element {
   return (
     <div className="page">
       <HeaderComponent/>
-
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
             <ul className="favorites__list">
-              {[...getFavoritesCitys()].map((city, id) => {
+              {[...getFavoritesCities()].map((city, id) => {
                 const favoritesByCity : Offer[] = [];
                 getFavoritesOffers().forEach((offer)=>{
                   if (city === offer.city.name) {

@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import StarsInputComponent from './stars-input-component';
-import { STARS } from '../../consts';
+import { STARS, COMMENT_MAX_LENGTH, COMMENT_MIN_LENGTH } from '../../consts';
 
 type NewReviewComponentProps = {
   onComment : (userSelect : number, userText : string)=> void;
@@ -9,7 +9,7 @@ type NewReviewComponentProps = {
 function NewReviewComponent({onComment}:NewReviewComponentProps): JSX.Element {
   const [userText, setUserText] = useState('');
   const [userSelect, setUserSelect] = useState<number>(0);
-  const disabled = userText === '' || userSelect === 0;
+  const disabled = COMMENT_MAX_LENGTH < userText.length || userText.length < COMMENT_MIN_LENGTH || userSelect === 0;
   const onChange = ({target} : ChangeEvent<HTMLInputElement>) => {
     setUserSelect(+target.value);};
   return (
@@ -30,6 +30,9 @@ function NewReviewComponent({onComment}:NewReviewComponentProps): JSX.Element {
         })}
       </div>
       <textarea className="reviews__textarea form__textarea"
+        required
+        minLength={COMMENT_MIN_LENGTH}
+        maxLength={COMMENT_MAX_LENGTH}
         id="review"
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"

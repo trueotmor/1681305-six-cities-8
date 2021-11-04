@@ -1,33 +1,40 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Offer } from '../../types/offer';
 import { CardClassProps } from '../../types/card';
 
+import { bindActionCreators, Dispatch } from 'redux';
+import { connect, ConnectedProps } from 'react-redux';
+import { Actions } from '../../types/action';
+import { selectOffer as selectOfferState } from '../../store/action';
+
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
+  onHover : selectOfferState,
+}, dispatch);
+
+const connector = connect(null, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
 type PlaceCardProps = {
   offer : Offer;
   cardClass : CardClassProps;
-  updateData? : ((value: string) => void) | undefined;
 }
 
-function CardComponent({offer, cardClass , updateData} : PlaceCardProps): JSX.Element {
+type ConnectedComponentProps = PropsFromRedux & PlaceCardProps;
+
+function CardComponent(props : ConnectedComponentProps): JSX.Element {
+  const {offer, cardClass, onHover} = props;
   const {isPremium, price, title, type, previewImage, isFavorite, rating, uniqueOfferID} = offer;
   const {articleClass, imageWrapperClass, cardInfoClass, imageSize} = cardClass;
   const iconBookmark = isFavorite ? <use xlinkHref="#icon-bookmark" fill='#4481c3' stroke='#4481c3'></use> : <use xlinkHref="#icon-bookmark" fill='#ffffff' stroke='#b8b8b8'></use>;
-  const [, setHover] = useState<string>('');
-  const setState = (state : string) => {
-    setHover(state);
-    if (updateData) {
-      updateData(state);
-    }
-  };
 
   return (
     <article className={`${articleClass} place-card`} id={`offer-${uniqueOfferID}`}
       onMouseEnter={()=>{
-        setState(uniqueOfferID);
+        onHover(uniqueOfferID);
       }}
       onMouseLeave={()=>{
-        setState('');
+        onHover('');
       }}
     >
       {isPremium && <div className="place-card__mark"><span>Premium</span></div>}
@@ -64,4 +71,5 @@ function CardComponent({offer, cardClass , updateData} : PlaceCardProps): JSX.El
   );
 }
 
-export default CardComponent;
+export { CardComponent };
+export default connector( CardComponent );

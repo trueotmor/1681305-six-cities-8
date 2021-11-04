@@ -12,12 +12,13 @@ export enum AuthorizationStatus {
 
 export const STARS = 5;
 
-export const URL_MARKER_DEFAULT =
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
+export const URL_MARKER_DEFAULT = '../img/pin.svg';
 
-export const URL_MARKER_CURRENT =
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
-
+export const URL_MARKER_CURRENT = '../img/pin-active.svg';
 
 export const COMMENT_MAX_LENGTH = 300;
 export const COMMENT_MIN_LENGTH = 50;
+
+export const CITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
+
+export const SORT_TYPES = ['Popular', 'Price: low to high', 'Price: high to low', 'Top rated first'];

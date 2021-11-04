@@ -22,7 +22,7 @@ function App({offers, reviews}:AppScreenProps): JSX.Element {
     <BrowserRouter>
       <Switch>
         <Route path={AppRoute.Main} exact>
-          <MainScreen offers = {offers}/>
+          <MainScreen/>
         </Route>
         <PrivateRoute path={AppRoute.Favorites} exact render={()=> <FavoritesScreen offers = {offers}/>} authorizationStatus={AuthorizationStatus.Auth}/>
         <Route path={AppRoute.Room} exact>

@@ -1,42 +1,51 @@
-function MainTabsComponent(): JSX.Element {
+import { bindActionCreators, Dispatch } from 'redux';
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from '../../types/state';
+import { Actions } from '../../types/action';
+import { selectCity, offersByCity } from '../../store/action';
+import { CITIES } from '../../consts';
+import classNames from 'classnames';
+
+const mapStateToProps = ({city} : State) => ({
+  city,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
+  onCitySelect : selectCity,
+  onCitySelectGetOffers : offersByCity,
+}, dispatch);
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function MainTabsComponent(props : PropsFromRedux): JSX.Element {
+  const {onCitySelect, onCitySelectGetOffers, city} = props;
   return (
     <div className="tabs">
       <section className="locations container">
         <ul className="locations__list tabs__list">
-          <li className="locations__item">
-            <a className="locations__item-link tabs__item" href="/">
-              <span>Paris</span>
-            </a>
-          </li>
-          <li className="locations__item">
-            <a className="locations__item-link tabs__item" href="/">
-              <span>Cologne</span>
-            </a>
-          </li>
-          <li className="locations__item">
-            <a className="locations__item-link tabs__item" href="/">
-              <span>Brussels</span>
-            </a>
-          </li>
-          <li className="locations__item">
-            <a className="locations__item-link tabs__item tabs__item--active" href="/">
-              <span>Amsterdam</span>
-            </a>
-          </li>
-          <li className="locations__item">
-            <a className="locations__item-link tabs__item" href="/">
-              <span>Hamburg</span>
-            </a>
-          </li>
-          <li className="locations__item">
-            <a className="locations__item-link tabs__item" href="/">
-              <span>Dusseldorf</span>
-            </a>
-          </li>
+          {CITIES.map((place, id) => {
+            const keyValue = `${id}-${place}`;
+            const cityClass = classNames('locations__item-link tabs__item', {'tabs__item--active' : city === place});
+            return (
+              <li className="locations__item" key={keyValue} onClick={(event)=>{
+                event.preventDefault();
+                onCitySelect(place);
+                onCitySelectGetOffers(place, 'Popular');
+              }}
+              >
+                <a className={cityClass} href="/">
+                  <span>{place}</span>
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </section>
     </div>
   );
 }
 
-export default MainTabsComponent;
+export { MainTabsComponent };
+export default connector( MainTabsComponent );

@@ -1,12 +1,18 @@
 import CardComponent from '../card-component/card-component';
-import { Offer } from '../../types/offer';
 
-type CardsListComponentProps = {
-  offers : Offer[];
-  updateData : (value: string) => void;
-}
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from '../../types/state';
 
-function CardsListComponent({offers, updateData} : CardsListComponentProps): JSX.Element {
+const mapStateToProps = ({offers} : State) => ({
+  offers,
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function CardsListComponent(props : PropsFromRedux): JSX.Element {
+  const { offers } = props;
   const cardClass = {
     articleClass : 'cities__place-card',
     imageWrapperClass : 'cities__image-wrapper',
@@ -18,11 +24,11 @@ function CardsListComponent({offers, updateData} : CardsListComponentProps): JSX
         offers.map((offer, id) => {
           const keyValue = `${id}-${offer.id}`;
           return (
-            <CardComponent key = {keyValue} offer = {offer} cardClass = {cardClass} updateData = {updateData}/>
+            <CardComponent key = {keyValue} offer = {offer} cardClass = {cardClass}/>
           );
         })
       }
     </div>);
 }
-
-export default CardsListComponent;
+export { CardsListComponent };
+export default connector( CardsListComponent );

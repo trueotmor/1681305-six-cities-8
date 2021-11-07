@@ -5,7 +5,6 @@ import ReviewsComponent from '../reviews-component/reviews-component';
 import CardComponent from '../card-component/card-component';
 import { CommentGet } from '../../types/comment-get';
 import Map from '../map-component/map-component';
-import { useState } from 'react';
 import { getNearPlaces } from '../../mocks/near-places';
 
 type OfferScreenProps = {
@@ -25,11 +24,6 @@ function OfferScreen({offer, reviews, onComment}:OfferScreenProps): JSX.Element 
     imageWrapperClass : 'near-places__image-wrapper',
     imageSize : {width : 260, height : 200},
   };
-
-  const [selectedPoint, setSelectedPoint] = useState<string | undefined>(undefined);
-  function updateData (value : string) {
-    return setSelectedPoint(value);
-  }
 
   return (
     <div className="page">
@@ -103,7 +97,7 @@ function OfferScreen({offer, reviews, onComment}:OfferScreenProps): JSX.Element 
             </div>
           </div>
           <section className="property__map map">
-            <Map offers = {nearPlaces} selectedPoint = {selectedPoint}/>
+            <Map/>
           </section>
         </section>
         <div className="container">
@@ -113,7 +107,7 @@ function OfferScreen({offer, reviews, onComment}:OfferScreenProps): JSX.Element 
               { nearPlaces.map((item, id) => {
                 const keyValue = `${id} - ${item}`;
                 return (
-                  <CardComponent key={keyValue} offer={item} cardClass={cardClass} updateData={updateData}/>
+                  <CardComponent key={keyValue} offer={item} cardClass={cardClass}/>
                 );
               })}
             </div>

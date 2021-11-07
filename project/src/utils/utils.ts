@@ -1,3 +1,5 @@
+import { getOffers } from '../mocks/offers';
+import { Offer } from '../types/offer';
 
 export const getRandomInteger = (a = 0, b = 1):number => {
   const lower = Math.ceil(Math.min(a, b));
@@ -40,3 +42,44 @@ export function getRandomElement<T> (iterable : Set<T>) :T {
 }
 
 export const getBoolean = () : boolean => Boolean(getRandomInteger(0, 1));
+
+const offers = getOffers();
+
+export const getOffersByCity = (city : string, sortType : string) : Offer[] => {
+  const cityOffers = offers.filter((el) => el.city.name === city);
+  switch (sortType) {
+    case 'Popular' :
+      return cityOffers;
+    case 'Price: low to high' :
+      return cityOffers.sort((a, b) => {
+        if (a.price > b.price) {
+          return 1;
+        }
+        if (a.price < b.price) {
+          return -1;
+        }
+        return 0;
+      });
+    case 'Price: high to low' :
+      return cityOffers.sort((b, a) => {
+        if (a.price > b.price) {
+          return 1;
+        }
+        if (a.price < b.price) {
+          return -1;
+        }
+        return 0;
+      });
+    case 'Top rated first' :
+      return cityOffers.sort((b, a) => {
+        if (a.rating > b.rating) {
+          return 1;
+        }
+        if (a.rating < b.rating) {
+          return -1;
+        }
+        return 0;
+      });
+  }
+  return cityOffers;
+};

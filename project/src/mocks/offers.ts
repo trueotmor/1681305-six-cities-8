@@ -33,7 +33,7 @@ const MAX_IMAGES = 6;
 const MIN_GOODS = 2;
 const MAX_GOODS = 6;
 
-const OFFERS_LENGHT = 5;
+const OFFERS_LENGHT = 20;
 
 const citys = new Set(['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf']);
 const getRandomCity = ():string => getRandomElement<string>(citys);

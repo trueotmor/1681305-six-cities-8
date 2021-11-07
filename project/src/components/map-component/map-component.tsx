@@ -2,30 +2,38 @@ import {useRef, useEffect} from 'react';
 import {Icon, Marker} from 'leaflet';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../consts';
 import 'leaflet/dist/leaflet.css';
-import { Offer } from '../../types/offer';
 import useMap from '../../hooks/useMap';
 
-type MapProps = {
-  offers : Offer[];
-  selectedPoint : string | undefined;
-}
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from '../../types/state';
+
+const mapStateToProps = ({offers, selectedID} : State) => ({
+  offers,
+  selectedID,
+});
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const defaultCustomIcon = new Icon({
   iconUrl: URL_MARKER_DEFAULT,
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
+  iconSize: [30, 40],
+  iconAnchor: [15, 40],
 });
 
 const currentCustomIcon = new Icon({
   iconUrl: URL_MARKER_CURRENT,
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
+  iconSize: [30, 40],
+  iconAnchor: [15, 40],
 });
 
-function Map ({offers, selectedPoint} : MapProps) : JSX.Element {
-  const [offer] = offers;
-  const currentOffer = offer;
+function Map (props : PropsFromRedux) : JSX.Element {
+  const { offers, selectedID } = props;
+  const [currentOffer] = offers;
   const {city} = currentOffer;
+
+  const selectedPoint = selectedID;
 
   const mapRef = useRef(null);
   const map = useMap({mapRef, city});
@@ -48,11 +56,12 @@ function Map ({offers, selectedPoint} : MapProps) : JSX.Element {
           .addTo(map);
       });
     }
-  }, [map, offers, selectedPoint]);
+  },[map, offers, selectedPoint]);
 
   return (
     <div style = {{height : '100%'}} ref={mapRef}></div>
   );
 }
 
-export default Map;
+export { Map };
+export default connector( Map );

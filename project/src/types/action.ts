@@ -1,4 +1,7 @@
-import { Offer } from '../types/offer';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { AxiosInstance } from 'axios';
+import { loadOffers, offersByCity, requireAuthorization, requireLogout, resetCity, selectCity, selectOffer, selectSortType } from '../store/action';
+import { State } from './state';
 
 export enum ActionType {
   SelectCity = 'main/selectCity',
@@ -6,30 +9,21 @@ export enum ActionType {
   ResetCity = 'main/resetCity',
   SelectOffer = 'main/selectOffer',
   SelectSortType = 'main/selectSortType',
+  LoadOffers = 'data/loadOffers',
+  RequireAuthorization = 'user/requireAuthorization',
+  RequireLogout = 'user/requireLogout',
 }
 
-export type SelectCityAction = {
-  type : ActionType.SelectCity;
-  payload : string;
-}
+export type Actions =
+| ReturnType<typeof selectCity>
+| ReturnType<typeof offersByCity>
+| ReturnType<typeof selectOffer>
+| ReturnType<typeof selectSortType>
+| ReturnType<typeof resetCity>
+| ReturnType<typeof loadOffers>
+| ReturnType<typeof requireAuthorization>
+| ReturnType<typeof requireLogout>;
 
-export type OffersByCityAction = {
-  type : ActionType.OffersByCity;
-  payload : Offer[];
-}
+export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;
 
-export type ResetCityAction = {
-  type : ActionType.ResetCity;
-}
-
-export type SelectOfferAction = {
-  type : ActionType.SelectOffer;
-  payload : string;
-}
-
-export type SelectSortTypeAction = {
-  type : ActionType.SelectSortType;
-  payload : string;
-}
-
-export type Actions = SelectCityAction | OffersByCityAction | ResetCityAction | SelectOfferAction | SelectSortTypeAction;
+export type ThunkAppDispatch = ThunkDispatch<State, AxiosInstance, Actions>;

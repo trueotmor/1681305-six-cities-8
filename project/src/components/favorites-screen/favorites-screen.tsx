@@ -3,11 +3,7 @@ import FavoritesItemComponent from './favorites-item';
 import HeaderComponent from '../header-component/header-component';
 import { Offer } from '../../types/offer';
 
-type FavoritesScreenProps = {
-  offers : Offer[];
-}
-
-function FavoritesScreen({offers} : FavoritesScreenProps): JSX.Element {
+function FavoritesScreen(): JSX.Element {
   const getFavoritesOffers = () => {
     const favorites : Offer[] = [];
     offers.forEach((offer) => {

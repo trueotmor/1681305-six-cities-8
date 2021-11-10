@@ -1,3 +1,4 @@
+import { AuthorizationStatus } from '../consts';
 import { getOffers } from '../mocks/offers';
 import { Offer } from '../types/offer';
 
@@ -83,3 +84,6 @@ export const getOffersByCity = (city : string, sortType : string) : Offer[] => {
   }
   return cityOffers;
 };
+
+export const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
+  authorizationStatus === AuthorizationStatus.Unknown;

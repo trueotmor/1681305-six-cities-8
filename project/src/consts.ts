@@ -8,6 +8,14 @@ export enum AppRoute {
 export enum AuthorizationStatus {
   Auth = 'AUTH',
   NoAuth = 'NO_AUTH',
+  Unknown = 'UNKNOWN',
+}
+
+export enum APIRoute {
+  Hotels = '/hotels',
+  Favorite = '/favorite',
+  Login = '/login',
+  Logout = '/logout',
 }
 
 export const STARS = 5;

@@ -2,7 +2,9 @@ import {useRef, useEffect} from 'react';
 import {Icon, Marker} from 'leaflet';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../consts';
 import 'leaflet/dist/leaflet.css';
-import useMap from '../../hooks/useMap';
+import useMap from '../../hooks/use-map';
+
+import { getOffers } from '../../mocks/offers';
 
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
@@ -29,7 +31,13 @@ const currentCustomIcon = new Icon({
 });
 
 function Map (props : PropsFromRedux) : JSX.Element {
-  const { offers, selectedID } = props;
+  // const { offers, selectedID } = props;
+
+
+  const offers = getOffers();
+  const selectedID = '';
+
+  // TODO
   const [currentOffer] = offers;
   const {city} = currentOffer;
 

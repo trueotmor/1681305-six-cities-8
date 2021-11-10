@@ -1,21 +1,17 @@
-import { Offer } from '../../types/offer';
 import HeaderComponent from '../header-component/header-component';
 import HostComponent from './host-component';
 import ReviewsComponent from '../reviews-component/reviews-component';
 import CardComponent from '../card-component/card-component';
-import { CommentGet } from '../../types/comment-get';
 import Map from '../map-component/map-component';
 import { getNearPlaces } from '../../mocks/near-places';
 
 type OfferScreenProps = {
-  offer : Offer;
-  reviews : CommentGet[];
   onComment : () => void;
 }
 
 const nearPlaces = getNearPlaces();
 
-function OfferScreen({offer, reviews, onComment}:OfferScreenProps): JSX.Element {
+function OfferScreen({onComment}:OfferScreenProps): JSX.Element {
   const {isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description} = offer;
   const iconBookmark = isFavorite ? <use xlinkHref="#icon-bookmark" fill='#4481c3' stroke='#4481c3'></use> : <use xlinkHref="#icon-bookmark"fill='#ffffff' stroke='#b8b8b8'></use>;
   const ratingNumbers = (rating / 20).toFixed(1);

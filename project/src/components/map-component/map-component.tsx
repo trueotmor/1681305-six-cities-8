@@ -1,17 +1,15 @@
 import {useRef, useEffect} from 'react';
-import {Icon, Marker} from 'leaflet';
+import L, {Icon, Marker} from 'leaflet';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../consts';
 import 'leaflet/dist/leaflet.css';
 import useMap from '../../hooks/use-map';
-
-import { getOffers } from '../../mocks/offers';
-
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 
-const mapStateToProps = ({offers, selectedID} : State) => ({
+const mapStateToProps = ({offers, selectedID, city} : State) => ({
   offers,
   selectedID,
+  city,
 });
 
 const connector = connect(mapStateToProps);
@@ -31,21 +29,12 @@ const currentCustomIcon = new Icon({
 });
 
 function Map (props : PropsFromRedux) : JSX.Element {
-  // const { offers, selectedID } = props;
-
-
-  const offers = getOffers();
-  const selectedID = '';
-
-  // TODO
-  const [currentOffer] = offers;
-  const {city} = currentOffer;
-
-  const selectedPoint = selectedID;
+  const { offers, selectedID } = props;
+  const city = offers[0].city;
 
   const mapRef = useRef(null);
   const map = useMap({mapRef, city});
-
+  const offersCords = L.layerGroup();
   useEffect(() => {
     if (map) {
       offers.forEach((point) => {
@@ -57,15 +46,15 @@ function Map (props : PropsFromRedux) : JSX.Element {
 
         marker
           .setIcon(
-            selectedPoint !== undefined && point.uniqueOfferID === selectedPoint
+            selectedID !== undefined && point.id === selectedID
               ? currentCustomIcon
               : defaultCustomIcon,
-          )
-          .addTo(map);
+          );
+        offersCords.addLayer(marker);
       });
+      offersCords.addTo(map);
     }
-  },[map, offers, selectedPoint]);
-
+  },[map, offers, selectedID, offersCords]);
   return (
     <div style = {{height : '100%'}} ref={mapRef}></div>
   );

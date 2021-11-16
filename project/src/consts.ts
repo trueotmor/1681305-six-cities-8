@@ -1,3 +1,16 @@
+export const STARS = 5;
+
+export const RATING_BAR_FACTOR = 100 / STARS;
+
+export const URL_MARKER_DEFAULT = '../img/pin.svg';
+
+export const URL_MARKER_CURRENT = '../img/pin-active.svg';
+
+export const COMMENT_MAX_LENGTH = 300;
+export const COMMENT_MIN_LENGTH = 50;
+
+export const ERROR_404 = 404;
+
 export enum AppRoute {
   Main = '/',
   SignIn = '/login',
@@ -16,17 +29,22 @@ export enum APIRoute {
   Favorite = '/favorite',
   Login = '/login',
   Logout = '/logout',
+  Comments = '/comments',
+  Nearby = '/nearby',
 }
 
-export const STARS = 5;
+export enum CitiesNames {
+  Paris = 'Paris',
+  Cologne = 'Cologne',
+  Brussels = 'Brussels',
+  Amsterdam = 'Amsterdam',
+  Hamburg = 'Hamburg',
+  Dusseldorf = 'Dusseldorf'
+}
 
-export const URL_MARKER_DEFAULT = '../img/pin.svg';
-
-export const URL_MARKER_CURRENT = '../img/pin-active.svg';
-
-export const COMMENT_MAX_LENGTH = 300;
-export const COMMENT_MIN_LENGTH = 50;
-
-export const CITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
-
-export const SORT_TYPES = ['Popular', 'Price: low to high', 'Price: high to low', 'Top rated first'];
+export enum SortTypes {
+  Popular = 'Popular',
+  PriceLowToHight = 'Price: low to high',
+  PriceHightToLow = 'Price: high to low',
+  TopRatedFirst = 'Top rated first',
+}

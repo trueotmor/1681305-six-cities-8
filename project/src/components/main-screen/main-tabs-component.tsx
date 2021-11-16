@@ -1,12 +1,15 @@
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
-import { Actions } from '../../types/action';
+import { Actions, ThunkAppDispatch } from '../../types/action';
 import { selectCity, offersByCity } from '../../store/action';
-import { CITIES } from '../../consts';
+import { CitiesNames, SortTypes } from '../../consts';
 import classNames from 'classnames';
+import { fetchOffersAction } from '../../store/api-actions';
+import { store } from '../../index';
 
-const mapStateToProps = ({city} : State) => ({
+const mapStateToProps = ({offers, city} : State) => ({
+  offers,
   city,
 });
 
@@ -19,8 +22,19 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
+
+function enumKeys<E>(e: E): (keyof E)[] {
+  return Object.keys(e) as (keyof E)[];
+}
+
+const CITIES: string[] = [];
+for (const key of enumKeys(CitiesNames)) {
+  const CityName: string = CitiesNames[key];
+  CITIES.push(CityName);
+}
+
 function MainTabsComponent(props : PropsFromRedux): JSX.Element {
-  const {onCitySelect, onCitySelectGetOffers, city} = props;
+  const {onCitySelect, city} = props;
   return (
     <div className="tabs">
       <section className="locations container">
@@ -31,8 +45,8 @@ function MainTabsComponent(props : PropsFromRedux): JSX.Element {
             return (
               <li className="locations__item" key={keyValue} onClick={(event)=>{
                 event.preventDefault();
+                (store.dispatch as ThunkAppDispatch)(fetchOffersAction(place, SortTypes.Popular));
                 onCitySelect(place);
-                onCitySelectGetOffers(place, 'Popular');
               }}
               >
                 <a className={cityClass} href="/">

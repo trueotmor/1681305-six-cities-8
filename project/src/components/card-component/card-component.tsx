@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Offer } from '../../types/offer';
 import { CardClassProps } from '../../types/card';
-
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { Actions } from '../../types/action';
 import { selectOffer as selectOfferState } from '../../store/action';
+import { RATING_BAR_FACTOR } from '../../consts';
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
   onHover : selectOfferState,
@@ -16,30 +16,30 @@ const connector = connect(null, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type PlaceCardProps = {
-  offer : Offer;
-  cardClass : CardClassProps;
+  offer : Offer,
+  cardClass : CardClassProps,
 }
 
 type ConnectedComponentProps = PropsFromRedux & PlaceCardProps;
 
 function CardComponent(props : ConnectedComponentProps): JSX.Element {
   const {offer, cardClass, onHover} = props;
-  const {isPremium, price, title, type, previewImage, isFavorite, rating, uniqueOfferID} = offer;
+  const {isPremium, price, title, type, previewImage, isFavorite, rating, id} = offer;
   const {articleClass, imageWrapperClass, cardInfoClass, imageSize} = cardClass;
   const iconBookmark = isFavorite ? <use xlinkHref="#icon-bookmark" fill='#4481c3' stroke='#4481c3'></use> : <use xlinkHref="#icon-bookmark" fill='#ffffff' stroke='#b8b8b8'></use>;
 
   return (
-    <article className={`${articleClass} place-card`} id={`offer-${uniqueOfferID}`}
+    <article className={`${articleClass} place-card`} id={`offer-${id}`}
       onMouseEnter={()=>{
-        onHover(uniqueOfferID);
+        onHover(id);
       }}
       onMouseLeave={()=>{
-        onHover('');
+        onHover(null);
       }}
     >
       {isPremium && <div className="place-card__mark"><span>Premium</span></div>}
       <div className={`${imageWrapperClass} place-card__image-wrapper`}>
-        <Link to={`/offer/${uniqueOfferID}`} >
+        <Link to={`/offer/${id}`} >
           <img className="place-card__image" src={previewImage} width={+imageSize.width} height={+imageSize.height} alt="Place"/>
         </Link>
       </div>
@@ -58,12 +58,12 @@ function CardComponent(props : ConnectedComponentProps): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{'width': `${rating}%`}}></span>
+            <span style={{'width': `${rating * RATING_BAR_FACTOR}%`}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`/offer/${uniqueOfferID}`}>{title}</Link>
+          <Link to={`/offer/${id}`}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

@@ -2,9 +2,9 @@ import { CommentGet } from '../types/comment-get';
 import { getRandomInteger, getBoolean, getRandomElement, getRndArr } from '../utils/utils';
 import { getRandomName, getAvatarUrl } from './offers';
 
-const generateRandomDOB = (): string => {
+const generateRandomDOB = (): Date => {
   const random = getRandomDate(new Date('2005-01-12T01:57:45.271Z'), new Date());
-  return (random.toISOString());
+  return (random);
 };
 
 function getRandomDate(from: Date, to: Date) {
@@ -36,7 +36,7 @@ export const getComments = () : CommentGet[] => {
   for (let actionIndex = 0; actionIndex < COMMENTS_LENGHT; actionIndex++){
     const comment : CommentGet = {
       comment : getComment(),
-      date : generateRandomDOB(),
+      date : generateRandomDOB().toISOString(),
       id : getRandomInteger(MIN_ID_RANGE, MAX_ID_RANGE),
       rating : getRandomInteger(MIN_RATING, MAX_RATING),
       user : {

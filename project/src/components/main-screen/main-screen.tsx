@@ -3,7 +3,6 @@ import MainTabsComponent from './main-tabs-component';
 import CardListComponent from './cards-list-component';
 import Map from '../map-component/map-component';
 import SortComponent from '../sort-component/sort-component';
-
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 

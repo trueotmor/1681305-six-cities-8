@@ -71,7 +71,7 @@ const getPreview = () => `http://picsum.photos/260/200?r=${Math.random()}`;
 const getRandomImage = () => `http://picsum.photos/260/200?r=${Math.random()}`;
 const getImages = () : string[] => Array(getRandomInteger(MIN_IMAGES, MAX_IMAGES)).fill('').map(getRandomImage);
 
-export const getOffers = () : Offer[] => {
+const getOffers = () : Offer[] => {
   const offers : Offer[] = [];
   for (let actionIndex = 0; actionIndex < OFFERS_LENGHT; actionIndex++){
     const offer: Offer = {

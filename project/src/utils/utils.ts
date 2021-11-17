@@ -1,5 +1,6 @@
-import { getOffers } from '../mocks/offers';
+import { AuthorizationStatus } from '../consts';
 import { Offer } from '../types/offer';
+import { Offers } from '../types/offers';
 
 export const getRandomInteger = (a = 0, b = 1):number => {
   const lower = Math.ceil(Math.min(a, b));
@@ -43,9 +44,7 @@ export function getRandomElement<T> (iterable : Set<T>) :T {
 
 export const getBoolean = () : boolean => Boolean(getRandomInteger(0, 1));
 
-const offers = getOffers();
-
-export const getOffersByCity = (city : string, sortType : string) : Offer[] => {
+export const getOffersByCity = (offers : Offers ,city  = 'Paris', sortType = 'Popular') : Offer[] => {
   const cityOffers = offers.filter((el) => el.city.name === city);
   switch (sortType) {
     case 'Popular' :
@@ -83,3 +82,6 @@ export const getOffersByCity = (city : string, sortType : string) : Offer[] => {
   }
   return cityOffers;
 };
+
+export const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
+  authorizationStatus === AuthorizationStatus.Unknown;

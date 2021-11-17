@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { RATING_BAR_FACTOR } from '../../consts';
 import { CommentGet } from '../../types/comment-get';
 
 type ReviewComponentProps = {
@@ -21,14 +22,14 @@ function ReviewComponent({review}: ReviewComponentProps): JSX.Element {
       <div className="reviews__info">
         <div className="reviews__rating rating">
           <div className="reviews__stars rating__stars">
-            <span style={{'width': `${rating}%`}}></span>
+            <span style={{'width': `${rating * RATING_BAR_FACTOR}%`}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <p className="reviews__text">
           {comment}
         </p>
-        <time className="reviews__time" dateTime={date}>{formattedDate}</time>
+        <time className="reviews__time" dateTime={date.toString()}>{formattedDate}</time>
       </div>
     </li>
 

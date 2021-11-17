@@ -1,21 +1,34 @@
-import {connect, ConnectedProps} from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { bindActionCreators, Dispatch } from 'redux';
-import { resetCity as resetCityState } from '../../store/action';
-import { Actions } from '../../types/action';
+import { AppRoute } from '../../consts';
+import { offersByCity, selectCity } from '../../store/action';
+import { Actions, ThunkAppDispatch } from '../../types/action';
+import { SortTypes } from '../../consts';
+import { CitiesNames } from '../../consts';
+import { State } from '../../types/state';
+import { fetchOffersAction } from '../../store/api-actions';
+import { store } from '../../index';
+
+const mapStateToProps = ({offers} : State) => ({
+  offers,
+});
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
-  onResetCity : resetCityState,
+  onCitySelect : selectCity,
+  onCitySelectGetOffers : offersByCity,
 }, dispatch);
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-function Logo({onResetCity} : PropsFromRedux): JSX.Element {
+function Logo(props : PropsFromRedux): JSX.Element {
+  const {onCitySelect} = props;
   return (
-    <Link className='header__logo' to='/' onClick={()=>{
-      onResetCity();
+    <Link className='header__logo' to={AppRoute.Main} onClick={()=>{
+      (store.dispatch as ThunkAppDispatch)(fetchOffersAction(CitiesNames.Paris, SortTypes.Popular));
+      onCitySelect(CitiesNames.Paris);
     }}
     >
       <div className='header__logo-link'>

@@ -1,7 +1,54 @@
 import { Link } from 'react-router-dom';
+import { logoutAction } from '../../store/api-actions';
+import { ThunkAppDispatch } from '../../types/action';
+import { AuthInfo } from '../../types/auth-info';
+import { State } from '../../types/state';
 import Logo from '../logo/logo';
+import { connect, ConnectedProps } from 'react-redux';
+import { AppRoute, AuthorizationStatus } from '../../consts';
 
-function HeaderComponent(): JSX.Element {
+type UserProps = {
+  user: AuthInfo | Record<string, never>,
+}
+
+const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
+  logout() {
+    dispatch(logoutAction());
+  },
+});
+
+const mapStateToProps = ({ authorizationStatus, user }: State) => ({
+  authorizationStatus,
+  user,
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function Guest(): JSX.Element {
+  return (
+    <Link to={AppRoute.SignIn} className="header__nav-link header__nav-link--profile" >
+      <div className="header__avatar-wrapper user__avatar-wrapper">
+      </div>
+      <span className="header__login">Sign in</span>
+    </Link>
+  );
+}
+
+function User({ user }: UserProps): JSX.Element {
+  const email = user.email;
+  return (
+    <Link to={AppRoute.Favorites} className="header__nav-link header__nav-link--profile" >
+      <div className="header__avatar-wrapper user__avatar-wrapper">
+      </div>
+      <span className="header__user-name user__name">{email}</span>
+    </Link>
+  );
+}
+
+function HeaderComponent(props: PropsFromRedux): JSX.Element {
+  const { authorizationStatus, user, logout } = props;
   return (
     <header className="header">
       <div className="container">
@@ -12,17 +59,24 @@ function HeaderComponent(): JSX.Element {
           <nav className="header__nav">
             <ul className="header__nav-list">
               <li className="header__nav-item user">
-                <a className="header__nav-link header__nav-link--profile" href="/">
-                  <div className="header__avatar-wrapper user__avatar-wrapper">
-                  </div>
-                  <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                </a>
+                {
+                  authorizationStatus === AuthorizationStatus.Auth
+                    ? <User user={user}/>
+                    : <Guest/>
+                }
               </li>
-              <li className="header__nav-item">
-                <Link className="header__nav-link" to="/">
-                  <span className="header__signout">Sign out</span>
-                </Link>
-              </li>
+              {
+                authorizationStatus === AuthorizationStatus.Auth &&
+                <li className="header__nav-item">
+                  <Link className="header__nav-link" to={AppRoute.Main} onClick={(evt) => {
+                    evt.preventDefault();
+                    logout();
+                  }}
+                  >
+                    <span className="header__signout">Sign out</span>
+                  </Link>
+                </li>
+              }
             </ul>
           </nav>
         </div>
@@ -30,5 +84,5 @@ function HeaderComponent(): JSX.Element {
     </header>
   );
 }
-
-export default HeaderComponent;
+export { HeaderComponent };
+export default connector(HeaderComponent);

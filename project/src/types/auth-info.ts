@@ -1,8 +1,7 @@
-export type AuthInfo = {
-  avatarUrl : string;
-  email : string;
-  id : number;
-  isPro : boolean;
-  name : string;
-  token : string;
+import { Token } from '../services/token';
+import { User } from './user';
+
+export type AuthInfo = User & {
+  email : string,
+  token : Token,
 };

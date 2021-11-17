@@ -1,15 +1,14 @@
 import {useRef, useEffect} from 'react';
 import L, {Icon, Marker} from 'leaflet';
-import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../consts';
+import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT, DEFAULT_CITY} from '../../consts';
 import 'leaflet/dist/leaflet.css';
 import useMap from '../../hooks/use-map';
 import { connect, ConnectedProps } from 'react-redux';
 import { State } from '../../types/state';
 
-const mapStateToProps = ({offers, selectedID, city} : State) => ({
+const mapStateToProps = ({offers, selectedID} : State) => ({
   offers,
   selectedID,
-  city,
 });
 
 const connector = connect(mapStateToProps);
@@ -30,7 +29,9 @@ const currentCustomIcon = new Icon({
 
 function Map (props : PropsFromRedux) : JSX.Element {
   const { offers, selectedID } = props;
-  const city = offers[0].city;
+
+  let city = {...DEFAULT_CITY};
+  if(offers.length) {city = offers[0].city;}
 
   const mapRef = useRef(null);
   const map = useMap({mapRef, city});

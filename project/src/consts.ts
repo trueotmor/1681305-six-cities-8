@@ -48,3 +48,13 @@ export enum SortTypes {
   PriceHightToLow = 'Price: high to low',
   TopRatedFirst = 'Top rated first',
 }
+
+export const DEFAULT_CITY = {
+  location: {
+    latitude: 48.864716,
+    longitude: 2.349014,
+    zoom: 13,
+  },
+  name: CitiesNames.Paris.toString(),
+};
+

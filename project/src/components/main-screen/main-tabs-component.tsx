@@ -8,8 +8,7 @@ import classNames from 'classnames';
 import { fetchOffersAction } from '../../store/api-actions';
 import { store } from '../../index';
 
-const mapStateToProps = ({offers, city} : State) => ({
-  offers,
+const mapStateToProps = ({city} : State) => ({
   city,
 });
 

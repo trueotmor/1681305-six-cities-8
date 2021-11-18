@@ -36,6 +36,7 @@ function Map (props : PropsFromRedux) : JSX.Element {
   const mapRef = useRef(null);
   const map = useMap({mapRef, city});
   const offersCords = L.layerGroup();
+
   useEffect(() => {
     if (map) {
       offers.forEach((point) => {
@@ -55,6 +56,7 @@ function Map (props : PropsFromRedux) : JSX.Element {
       });
       offersCords.addTo(map);
     }
+    return () => { if (offersCords) { offersCords.clearLayers(); } };
   },[map, offers, selectedID, offersCords]);
   return (
     <div style = {{height : '100%'}} ref={mapRef}></div>

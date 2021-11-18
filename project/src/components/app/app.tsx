@@ -8,7 +8,7 @@ import LoginScreen from '../login-screen/login-screen';
 import OfferScreen from '../offer-screen/offer-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import PrivateRoute from '../private-route/private-route';
-import LoadingScreen from '../loading-screen/loading-screen';
+import LoadingScreen from '../loader/loader';
 import { State } from '../../types/state';
 import { isCheckedAuth } from '../../utils/utils';
 import browserHistory from '../../browser-history';

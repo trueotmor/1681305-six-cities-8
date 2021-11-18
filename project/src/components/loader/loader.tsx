@@ -1,4 +1,4 @@
-import styles from '../loading-screen/loading-screen.module.scss';
+import styles from '../loader/loader.module.scss';
 import Loader from 'react-loader-spinner';
 function LoadingScreen(): JSX.Element {
   return (

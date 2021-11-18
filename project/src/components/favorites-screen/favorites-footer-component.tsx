@@ -6,18 +6,12 @@ import { AppRoute, CitiesNames, SortTypes } from '../../consts';
 import { selectCity } from '../../store/action';
 import { fetchOffersAction } from '../../store/api-actions';
 import { Actions, ThunkAppDispatch } from '../../types/action';
-import { State } from '../../types/state';
-
-const mapStateToProps = ({offers, city} : State) => ({
-  city,
-  offers,
-});
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
   onCitySelect : selectCity,
 }, dispatch);
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(null, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

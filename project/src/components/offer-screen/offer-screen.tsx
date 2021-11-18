@@ -9,7 +9,7 @@ import { CommentPost } from '../../types/comment-post';
 import { connect, ConnectedProps } from 'react-redux';
 import { fetchCommentsAction, fetchCurrentOfferAction, fetchNearPlacesAction, fetchReviewAction } from '../../store/api-actions';
 import { useParams } from 'react-router';
-import LoadingScreen from '../loading-screen/loading-screen';
+import LoadingScreen from '../loader/loader';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import { useEffect } from 'react';
 import { requireDataUnload } from '../../store/action';

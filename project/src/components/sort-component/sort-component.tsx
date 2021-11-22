@@ -1,26 +1,9 @@
-import { bindActionCreators, Dispatch } from 'redux';
-import { connect, ConnectedProps } from 'react-redux';
-import { State } from '../../types/state';
 import { SortTypes } from '../../consts';
 import classNames from 'classnames';
 import { useState } from 'react';
-import { Actions } from '../../types/action';
-import { offersByCity, selectSortType } from '../../store/action';
-
-const mapStateToProps = ({offers, selectedSortType, city} : State) => ({
-  offers,
-  selectedSortType,
-  city,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
-  onSortChangeType : selectSortType,
-  onSortOffers : offersByCity,
-}, dispatch);
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
+import { useDispatch, useSelector } from 'react-redux';
+import { getCity, getOffers, getSort } from '../../store/main-data/selectors';
+import { loadOffers, selectSortType } from '../../store/action';
 
 function enumKeys<E>(e: E): (keyof E)[] {
   return Object.keys(e) as (keyof E)[];
@@ -32,10 +15,14 @@ for (const key of enumKeys(SortTypes)) {
   SORT_TYPES.push(SortType);
 }
 
-function SortComponent(props : PropsFromRedux): JSX.Element {
+function SortComponent(): JSX.Element {
+  const dispatch = useDispatch();
   const [menuState, setMenuState] = useState(false);
   const menuClass = classNames('places__options places__options--custom', {'places__options--opened' : menuState});
-  const { selectedSortType, onSortChangeType, onSortOffers, city, offers } = props;
+
+  const selectedSortType = useSelector(getSort);
+  const city = useSelector(getCity);
+  const offers = useSelector(getOffers);
 
   return (
     <form className="places__sorting" action="#" method="get"
@@ -55,15 +42,15 @@ function SortComponent(props : PropsFromRedux): JSX.Element {
       </span>
       <ul className = {menuClass}>
         {
-          SORT_TYPES.map((type, id) => {
-            const placeOptionClass = classNames('places__option', {'places__option--active': selectedSortType === type});
-            const keyValue = `${type}-${id}`;
+          SORT_TYPES.map((sortType, id) => {
+            const placeOptionClass = classNames('places__option', {'places__option--active': selectedSortType === sortType});
+            const keyValue = `${sortType}-${id}`;
             return (
               <li key = {keyValue} className={placeOptionClass} tabIndex={0} onClick={()=>{
-                onSortChangeType(type);
-                onSortOffers(offers, city, type);
+                dispatch(selectSortType(sortType));
+                dispatch(loadOffers({offers, city, sortType}));
               }}
-              >{type}
+              >{sortType}
               </li>
             );
           })
@@ -72,5 +59,5 @@ function SortComponent(props : PropsFromRedux): JSX.Element {
     </form>
   );
 }
-export { SortComponent };
-export default connector( SortComponent );
+
+export default SortComponent;

@@ -22,4 +22,4 @@ export type Offer = {
   rating : number;
   title : string;
   type : string;
-};
+} | Record<string, never>;

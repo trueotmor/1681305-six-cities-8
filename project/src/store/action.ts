@@ -1,70 +1,23 @@
-import { AuthorizationStatus, AppRoute } from '../consts';
+import { createAction } from '@reduxjs/toolkit';
+import { AppRoute, AuthorizationStatus } from '../consts';
 import { ActionType } from '../types/action';
 import { AuthInfo } from '../types/auth-info';
 import { CommentsGet } from '../types/comment-get';
 import { Offers } from '../types/offers';
-import { State } from '../types/state';
-import { getOffersByCity } from '../utils/utils';
+import { Offer } from '../types/offer';
 
-export const selectCity = (city: string) => ({
-  type: ActionType.SelectCity,
-  payload: city,
-} as const);
-
-export const offersByCity = (offers: Offers, city: string, sortType: string) => ({
-  type: ActionType.OffersByCity,
-  payload: getOffersByCity(offers, city, sortType),
-} as const);
-
-export const selectOffer = (ID: number | null) => ({
-  type: ActionType.SelectOffer,
-  payload: ID,
-} as const);
-
-export const selectSortType = (type: string) => ({
-  type: ActionType.SelectSortType,
-  payload: type,
-} as const);
-
-export const loadOffers = (offers: Offers, city: string | undefined, sortType: string | undefined) => ({
-  type: ActionType.LoadOffers,
-  payload: getOffersByCity(offers, city, sortType),
-} as const);
-
-export const loadCurrentOffer = (offer: State['currentOffer']) => ({
-  type: ActionType.LoadCurrentOffer,
-  payload: offer,
-}) as const;
-
-export const loadNearPlaces = (offers: Offers) => ({
-  type: ActionType.LoadNearPlaces,
-  payload: offers,
-} as const);
-
-export const loadComments = (comments: CommentsGet) => ({
-  type: ActionType.LoadComments,
-  payload: comments,
-} as const);
-
-export const requireAuthorization = (authStatus: AuthorizationStatus) => ({
-  type: ActionType.RequireAuthorization,
-  payload: authStatus,
-} as const);
-
-export const requireLogout = () => ({
-  type: ActionType.RequireLogout,
-} as const);
-
-export const redirectToRoute = (url: AppRoute) => ({
-  type: ActionType.RedirectToRoute,
-  payload: url,
-} as const);
-
-export const requireDataUnload = () => ({
-  type: ActionType.RequireDataUnload,
-} as const);
-
-export const setUserAuthInfo = (data: AuthInfo | Record<string, never> = {}) => ({
-  type: ActionType.SetUserAuthInfo,
-  payload: data,
-} as const);
+export const selectCity = createAction<string>(ActionType.SelectCity);
+export const offersByCity = createAction<{offers: Offers, city: string | undefined, sortType: string}>(ActionType.OffersByCity);
+export const selectOffer = createAction<number | null>(ActionType.SelectOffer);
+export const selectSortType = createAction<string>(ActionType.SelectSortType);
+export const loadOffers = createAction<{offers: Offers, city: string | undefined, sortType: string | undefined}>(ActionType.LoadOffers);
+export const loadCurrentOffer = createAction<Offer>(ActionType.LoadCurrentOffer);
+export const loadNearPlaces = createAction<Offers>(ActionType.LoadNearPlaces);
+export const loadComments = createAction<CommentsGet>(ActionType.LoadComments);
+export const requireDataUnload = createAction(ActionType.RequireDataUnload);
+export const requireAuthorization = createAction<AuthorizationStatus>(ActionType.RequireAuthorization);
+export const requireLogout = createAction(ActionType.RequireLogout);
+export const redirectToRoute = createAction<AppRoute>(ActionType.RedirectToRoute);
+export const setUserAuthInfo = createAction<AuthInfo | Record<string, never>>(ActionType.SetUserAuthInfo);
+export const loadFavoritesOffers = createAction<Offers>(ActionType.LoadFavoritesOffers);
+export const changeIsFavoriteStatus = createAction<{id: number, isFavorite: boolean}>(ActionType.ChangeIsFavoriteStatus);

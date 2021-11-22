@@ -1,22 +1,18 @@
 import Logo from '../logo/logo';
 import { useRef, FormEvent } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAuthorizationStatus } from '../../store/user-data/services';
+import { AppRoute, AuthorizationStatus } from '../../consts';
+import { redirectToRoute } from '../../store/action';
 import { loginAction } from '../../store/api-actions';
-import { ThunkAppDispatch } from '../../types/action';
-import { AuthData } from '../../types/auth-data';
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  onSubmit(authData: AuthData) {
-    dispatch(loginAction(authData));
-  },
-});
+function LoginScreen(): JSX.Element {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const dispatch = useDispatch();
 
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function LoginScreen(props : PropsFromRedux): JSX.Element {
-  const {onSubmit} = props;
+  if (authorizationStatus === AuthorizationStatus.Auth) {
+    dispatch(redirectToRoute(AppRoute.Favorites));
+  }
 
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
@@ -24,11 +20,12 @@ function LoginScreen(props : PropsFromRedux): JSX.Element {
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
 
-    if (loginRef.current !== null && passwordRef.current !== null) {
-      onSubmit({
+    if (loginRef.current && passwordRef.current) {
+      const authData = {
         email: loginRef.current.value,
         password: passwordRef.current.value,
-      });
+      };
+      dispatch(loginAction(authData));
     }
   };
 
@@ -93,5 +90,4 @@ function LoginScreen(props : PropsFromRedux): JSX.Element {
   );
 }
 
-export { LoginScreen };
-export default connector(LoginScreen);
+export default LoginScreen;

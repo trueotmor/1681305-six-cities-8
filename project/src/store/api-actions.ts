@@ -4,11 +4,27 @@ import { ThunkActionResult } from '../types/action';
 import { Offer } from '../types/offer';
 import { Offers } from '../types/offers';
 import { AuthData } from '../types/auth-data';
-import { loadOffers, redirectToRoute, requireAuthorization, requireLogout, loadCurrentOffer, selectCity, loadNearPlaces, loadComments, setUserAuthInfo } from './action';
+import {
+  loadOffers,
+  redirectToRoute,
+  requireAuthorization,
+  requireLogout,
+  loadCurrentOffer,
+  selectCity,
+  loadNearPlaces,
+  loadComments,
+  setUserAuthInfo,
+  changeIsFavoriteStatus,
+  loadFavoritesOffers
+} from './action';
+
 import camelcaseKeys from 'camelcase-keys';
 import { CommentsGet } from '../types/comment-get';
 import { AuthInfo } from '../types/auth-info';
 import { CommentPost } from '../types/comment-post';
+import { getCurrentOffer } from './main-data/selectors';
+import { getAuthorizationStatus } from './user-data/services';
+import { OfferFromServer } from '../types/offer-from-server';
 
 const adaptedOffers = (data: Offers) => data.map((offer) => camelcaseKeys(offer, {deep: true}));
 const adaptedComments = (data: CommentsGet) => data.map((comment) => camelcaseKeys(comment, {deep: true}));
@@ -16,7 +32,8 @@ const adaptedComments = (data: CommentsGet) => data.map((comment) => camelcaseKe
 export const fetchOffersAction = (city: string, sortType: string): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const {data} = await api.get<Offers>(APIRoute.Hotels);
-    dispatch(loadOffers(adaptedOffers(data), city, sortType));
+    const offers = adaptedOffers(data);
+    dispatch(loadOffers({offers, city, sortType}));
   };
 
 export const checkAuthAction = (): ThunkActionResult =>
@@ -45,7 +62,7 @@ export const logoutAction = (): ThunkActionResult =>
     api.delete(APIRoute.Logout);
     dropToken();
     dispatch(requireLogout());
-    dispatch(setUserAuthInfo());
+    dispatch(setUserAuthInfo({}));
   };
 
 
@@ -70,14 +87,33 @@ export const fetchNearPlacesAction = (id: number): ThunkActionResult =>
 
 export const fetchCommentsAction = (): ThunkActionResult =>
   async (dispatch, getState, api): Promise<void> => {
-    const objectId = getState().currentOffer.id;
+    const objectId = getCurrentOffer(getState()).id;
     const {data} = await api.get<CommentsGet>(`${APIRoute.Comments}/${objectId}`);
     dispatch(loadComments(adaptedComments(data)));
   };
 
 export const fetchReviewAction = (review: CommentPost): ThunkActionResult =>
   async (dispatch, getState, api) => {
-    const objectId = getState().currentOffer.id;
+    const objectId = getCurrentOffer(getState()).id;
     const {data} = await api.post<CommentsGet>(`${APIRoute.Comments}/${objectId}`, review);
     dispatch(loadComments(adaptedComments(data)));
+  };
+
+export const fetchFavoritesOffersAction = (): ThunkActionResult =>
+  async (dispatch, _getState, api): Promise<void> => {
+    const {data} = await api.get<Offers>(APIRoute.Favorite);
+    dispatch(loadFavoritesOffers(adaptedOffers(data)));
+  };
+
+export const fetchFavoritesAction = (objectId: number, wasFavorite: boolean): ThunkActionResult =>
+  async (dispatch, getState, api) => {
+    const isAuthorized = getAuthorizationStatus(getState());
+    if (isAuthorized === AuthorizationStatus.NoAuth) {
+      dispatch(redirectToRoute(AppRoute.SignIn));
+    }
+
+    const {data} = await api.post<OfferFromServer>(`${APIRoute.Favorite}/${objectId}/${Number(!wasFavorite)}`);
+    const changedOffer = camelcaseKeys(data, {deep: true});
+    const {id, isFavorite} = changedOffer;
+    dispatch(changeIsFavoriteStatus({ id, isFavorite }));
   };

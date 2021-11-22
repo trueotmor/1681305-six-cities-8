@@ -1,30 +1,14 @@
 import { Link } from 'react-router-dom';
 import { logoutAction } from '../../store/api-actions';
-import { ThunkAppDispatch } from '../../types/action';
 import { AuthInfo } from '../../types/auth-info';
-import { State } from '../../types/state';
 import Logo from '../logo/logo';
-import { connect, ConnectedProps } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppRoute, AuthorizationStatus } from '../../consts';
+import { getAuthorizationStatus, getUser } from '../../store/user-data/services';
 
 type UserProps = {
   user: AuthInfo | Record<string, never>,
 }
-
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  logout() {
-    dispatch(logoutAction());
-  },
-});
-
-const mapStateToProps = ({ authorizationStatus, user }: State) => ({
-  authorizationStatus,
-  user,
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function Guest(): JSX.Element {
   return (
@@ -36,7 +20,7 @@ function Guest(): JSX.Element {
   );
 }
 
-function User({ user }: UserProps): JSX.Element {
+function User({user}: UserProps): JSX.Element {
   const email = user.email;
   return (
     <Link to={AppRoute.Favorites} className="header__nav-link header__nav-link--profile" >
@@ -47,8 +31,15 @@ function User({ user }: UserProps): JSX.Element {
   );
 }
 
-function HeaderComponent(props: PropsFromRedux): JSX.Element {
-  const { authorizationStatus, user, logout } = props;
+function HeaderComponent(): JSX.Element {
+  const dispatch = useDispatch();
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const user = useSelector(getUser);
+
+  const logout = () => {
+    dispatch(logoutAction());
+  };
+
   return (
     <header className="header">
       <div className="container">
@@ -84,5 +75,5 @@ function HeaderComponent(props: PropsFromRedux): JSX.Element {
     </header>
   );
 }
-export { HeaderComponent };
-export default connector(HeaderComponent);
+
+export default HeaderComponent;

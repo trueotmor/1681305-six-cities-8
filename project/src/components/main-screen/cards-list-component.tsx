@@ -1,18 +1,9 @@
 import CardComponent from '../card-component/card-component';
+import { getOffers } from '../../store/main-data/selectors';
+import { useSelector } from 'react-redux';
 
-import { connect, ConnectedProps } from 'react-redux';
-import { State } from '../../types/state';
-
-const mapStateToProps = ({offers} : State) => ({
-  offers,
-});
-
-const connector = connect(mapStateToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function CardsListComponent(props : PropsFromRedux): JSX.Element {
-  const { offers } = props;
+function CardsListComponent(): JSX.Element {
+  const offers = useSelector(getOffers);
   const cardClass = {
     articleClass : 'cities__place-card',
     imageWrapperClass : 'cities__image-wrapper',
@@ -30,5 +21,5 @@ function CardsListComponent(props : PropsFromRedux): JSX.Element {
       }
     </div>);
 }
-export { CardsListComponent };
-export default connector( CardsListComponent );
+
+export default CardsListComponent;

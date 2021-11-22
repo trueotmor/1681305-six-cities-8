@@ -1,21 +1,17 @@
 import FavoritesFooterComponent from './favorites-footer-component';
 import FavoritesItemComponent from './favorites-item';
 import HeaderComponent from '../header-component/header-component';
-import {connect, ConnectedProps} from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
 import { Offers } from '../../types/offers';
-import { State } from '../../types/state';
-
-const mapStateToProps = ({offers}: State) => ({
-  offers,
-});
-
-const connector = connect(mapStateToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
+import { getFavoritesOffers, getIsDataLoaded } from '../../store/main-data/selectors';
+import { useEffect } from 'react';
+import { requireDataUnload } from '../../store/action';
+import { fetchFavoritesOffersAction } from '../../store/api-actions';
+import Loading from '../loader/loader';
 
 type FavoritesListComponentProps = {
   favoritesOffers: Offers,
-  favoritesCities: Set<string>,
+  favoritesCities: string[],
 }
 
 function FavoritesListComponent(props: FavoritesListComponentProps): JSX.Element {
@@ -53,24 +49,31 @@ function FavoritesEmptyComponent(): JSX.Element {
   );
 }
 
-function FavoritesScreen({offers}: PropsFromRedux): JSX.Element {
-  const getFavoritesOffers = () => {
-    const favorites : Offers = [];
-    offers.forEach((offer) => {
-      if (offer.isFavorite) {
-        favorites.push(offer);
-      }
-    });
-    return favorites;
+function FavoritesScreen(): JSX.Element {
+  const dispatch = useDispatch();
+  const isDataLoaded = useSelector(getIsDataLoaded);
+  const favoritesOffers = useSelector(getFavoritesOffers);
+
+  const getFavoritesCities = () : string[] => {
+    if (favoritesOffers.length > 0) {
+      const favoritesCities : Set<string> = new Set();
+      favoritesOffers.forEach((offer)=>{
+        favoritesCities.add(offer.city.name);
+      });
+      return [...favoritesCities];
+    } else {
+      return [];
+    }
   };
 
-  const getFavoritesCities = () : Set<string> => {
-    const favoritesCitys : Set<string> = new Set();
-    getFavoritesOffers().forEach((offer)=>{
-      favoritesCitys.add(offer.city.name);
-    });
-    return favoritesCitys;
-  };
+  useEffect(() => {
+    dispatch(requireDataUnload());
+    dispatch(fetchFavoritesOffersAction());
+  }, [dispatch]);
+
+  if (!isDataLoaded) {
+    return <Loading/>;
+  }
 
   return (
     <div className="page">
@@ -78,8 +81,8 @@ function FavoritesScreen({offers}: PropsFromRedux): JSX.Element {
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
           {
-            getFavoritesOffers().length > 0
-              ? <FavoritesListComponent favoritesOffers={getFavoritesOffers()} favoritesCities={getFavoritesCities()}/>
+            favoritesOffers.length > 0
+              ? <FavoritesListComponent favoritesOffers={favoritesOffers} favoritesCities={getFavoritesCities()}/>
               : <FavoritesEmptyComponent/>
           }
         </div>
@@ -89,5 +92,4 @@ function FavoritesScreen({offers}: PropsFromRedux): JSX.Element {
   );
 }
 
-export { FavoritesScreen };
-export default connector(FavoritesScreen);
+export default FavoritesScreen;

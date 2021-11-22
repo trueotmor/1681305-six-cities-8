@@ -1,24 +1,24 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 import StarsInputComponent from './stars-input-component';
 import { STARS, COMMENT_MAX_LENGTH, COMMENT_MIN_LENGTH } from '../../consts';
 import { CommentPost } from '../../types/comment-post';
+import { useReview } from '../../hooks/use-review';
 
 type NewReviewComponentProps = {
   onComment : (review: CommentPost)=> void;
 }
 
 function NewReviewComponent({onComment}:NewReviewComponentProps): JSX.Element {
-  const [review, setReview] = useState({ rating: 0, comment: '' });
-
+  const [review, handleStarsChange, handleCommentChange, handleResetForm] = useReview();
   const disabled = COMMENT_MAX_LENGTH < review.comment.length || review.comment.length < COMMENT_MIN_LENGTH || review.rating === 0;
   const onChange = ({target} : ChangeEvent<HTMLInputElement>) => {
-    setReview({...review, rating: parseInt(target.value, 10)});};
+    handleStarsChange(target.value);};
   return (
     <form className="reviews__form form" action="#" method="post"
       onSubmit={(evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
         onComment(review);
-        setReview({ rating: 0, comment: '' });
+        handleResetForm();
       }}
     >
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
@@ -41,7 +41,8 @@ function NewReviewComponent({onComment}:NewReviewComponentProps): JSX.Element {
         value = {review.comment}
         onChange={({target}: ChangeEvent<HTMLTextAreaElement>) => {
           const value = target.value;
-          setReview({...review, comment: value});
+          handleCommentChange(value);
+
         }}
       >
       </textarea>

@@ -1,5 +1,4 @@
 import { AuthorizationStatus } from '../consts';
-import { Offer } from '../types/offer';
 import { Offers } from '../types/offers';
 
 export const getRandomInteger = (a = 0, b = 1):number => {
@@ -44,7 +43,7 @@ export function getRandomElement<T> (iterable : Set<T>) :T {
 
 export const getBoolean = () : boolean => Boolean(getRandomInteger(0, 1));
 
-export const getOffersByCity = (offers : Offers ,city  = 'Paris', sortType = 'Popular') : Offer[] => {
+export const getOffersByCity = (offers : Offers ,city  = 'Paris', sortType = 'Popular') : Offers => {
   const cityOffers = offers.filter((el) => el.city.name === city);
   switch (sortType) {
     case 'Popular' :

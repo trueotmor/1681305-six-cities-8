@@ -1,29 +1,18 @@
-import { connect, ConnectedProps } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { bindActionCreators, Dispatch } from 'redux';
 import { AppRoute } from '../../consts';
-import { offersByCity, selectCity } from '../../store/action';
-import { Actions, ThunkAppDispatch } from '../../types/action';
 import { SortTypes } from '../../consts';
 import { CitiesNames } from '../../consts';
 import { fetchOffersAction } from '../../store/api-actions';
-import { store } from '../../index';
+import { selectCity, selectSortType } from '../../store/action';
+import { useDispatch } from 'react-redux';
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
-  onCitySelect : selectCity,
-  onCitySelectGetOffers : offersByCity,
-}, dispatch);
-
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function Logo(props : PropsFromRedux): JSX.Element {
-  const {onCitySelect} = props;
+function Logo(): JSX.Element {
+  const dispatch = useDispatch();
   return (
     <Link className='header__logo' to={AppRoute.Main} onClick={()=>{
-      (store.dispatch as ThunkAppDispatch)(fetchOffersAction(CitiesNames.Paris, SortTypes.Popular));
-      onCitySelect(CitiesNames.Paris);
+      dispatch(fetchOffersAction(CitiesNames.Paris, SortTypes.Popular));
+      dispatch(selectCity(CitiesNames.Paris));
+      dispatch(selectSortType(SortTypes.Popular));
     }}
     >
       <div className='header__logo-link'>
@@ -34,5 +23,4 @@ function Logo(props : PropsFromRedux): JSX.Element {
   );
 }
 
-export { Logo };
-export default connector( Logo );
+export default Logo;

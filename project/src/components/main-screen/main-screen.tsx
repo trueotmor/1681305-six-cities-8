@@ -3,20 +3,12 @@ import MainTabsComponent from './main-tabs-component';
 import CardListComponent from './cards-list-component';
 import Map from '../map-component/map-component';
 import SortComponent from '../sort-component/sort-component';
-import { connect, ConnectedProps } from 'react-redux';
-import { State } from '../../types/state';
+import { useSelector } from 'react-redux';
+import { getCity, getOffers } from '../../store/main-data/selectors';
 
-const mapStateToProps = ({offers, city} : State) => ({
-  city,
-  offers,
-});
-
-const connector = connect(mapStateToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function MainScreen(props : PropsFromRedux): JSX.Element {
-  const {city, offers} = props;
+function MainScreen(): JSX.Element {
+  const city = useSelector(getCity);
+  const offers = useSelector(getOffers);
 
   return (
     <div className="page page--gray page--main">
@@ -45,5 +37,4 @@ function MainScreen(props : PropsFromRedux): JSX.Element {
   );
 }
 
-export { MainScreen };
-export default connector(MainScreen);
+export default MainScreen;

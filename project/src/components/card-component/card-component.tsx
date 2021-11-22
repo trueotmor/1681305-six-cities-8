@@ -1,40 +1,38 @@
 import { Link } from 'react-router-dom';
 import { Offer } from '../../types/offer';
 import { CardClassProps } from '../../types/card';
-import { bindActionCreators, Dispatch } from 'redux';
-import { connect, ConnectedProps } from 'react-redux';
-import { Actions } from '../../types/action';
-import { selectOffer as selectOfferState } from '../../store/action';
-import { RATING_BAR_FACTOR } from '../../consts';
-
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
-  onHover : selectOfferState,
-}, dispatch);
-
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
+import { useDispatch } from 'react-redux';
+import { selectOffer } from '../../store/action';
+import { AppRoute, RATING_BAR_FACTOR } from '../../consts';
+import { fetchFavoritesAction, fetchFavoritesOffersAction, fetchNearPlacesAction } from '../../store/api-actions';
 
 type PlaceCardProps = {
   offer : Offer,
   cardClass : CardClassProps,
 }
 
-type ConnectedComponentProps = PropsFromRedux & PlaceCardProps;
-
-function CardComponent(props : ConnectedComponentProps): JSX.Element {
-  const {offer, cardClass, onHover} = props;
+function CardComponent(props : PlaceCardProps): JSX.Element {
+  const {offer, cardClass} = props;
+  const dispatch = useDispatch();
   const {isPremium, price, title, type, previewImage, isFavorite, rating, id} = offer;
   const {articleClass, imageWrapperClass, cardInfoClass, imageSize} = cardClass;
   const iconBookmark = isFavorite ? <use xlinkHref="#icon-bookmark" fill='#4481c3' stroke='#4481c3'></use> : <use xlinkHref="#icon-bookmark" fill='#ffffff' stroke='#b8b8b8'></use>;
 
+  const onBookmarkClick = () => {
+    dispatch(fetchFavoritesAction(id, isFavorite));
+    dispatch(fetchFavoritesOffersAction());
+    if (AppRoute.Room) {
+      dispatch(fetchNearPlacesAction(id));
+    }
+  };
+
   return (
     <article className={`${articleClass} place-card`} id={`offer-${id}`}
       onMouseEnter={()=>{
-        onHover(id);
+        dispatch(selectOffer(id));
       }}
       onMouseLeave={()=>{
-        onHover(null);
+        dispatch(selectOffer(null));
       }}
     >
       {isPremium && <div className="place-card__mark"><span>Premium</span></div>}
@@ -49,7 +47,7 @@ function CardComponent(props : ConnectedComponentProps): JSX.Element {
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className="place-card__bookmark-button button" type="button">
+          <button className="place-card__bookmark-button button" type="button" onClick={onBookmarkClick}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               {iconBookmark}
             </svg>
@@ -71,5 +69,4 @@ function CardComponent(props : ConnectedComponentProps): JSX.Element {
   );
 }
 
-export { CardComponent };
-export default connector( CardComponent );
+export default CardComponent;

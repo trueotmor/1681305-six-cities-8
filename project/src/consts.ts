@@ -58,3 +58,8 @@ export const DEFAULT_CITY = {
   name: CitiesNames.Paris.toString(),
 };
 
+export enum NameSpace {
+  user = 'USER',
+  data = 'DATA',
+  main = 'MAIN',
+}

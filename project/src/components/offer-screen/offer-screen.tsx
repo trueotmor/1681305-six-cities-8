@@ -3,45 +3,32 @@ import HostComponent from './host-component';
 import ReviewsComponent from '../reviews-component/reviews-component';
 import CardComponent from '../card-component/card-component';
 import Map from '../map-component/map-component';
-import { State } from '../../types/state';
-import { ThunkAppDispatch } from '../../types/action';
-import { CommentPost } from '../../types/comment-post';
-import { connect, ConnectedProps } from 'react-redux';
-import { fetchCommentsAction, fetchCurrentOfferAction, fetchNearPlacesAction, fetchReviewAction } from '../../store/api-actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCommentsAction, fetchCurrentOfferAction, fetchFavoritesAction, fetchNearPlacesAction, fetchReviewAction } from '../../store/api-actions';
 import { useParams } from 'react-router';
-import LoadingScreen from '../loader/loader';
+import Loading from '../loader/loader';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import { useEffect } from 'react';
 import { requireDataUnload } from '../../store/action';
 import { store } from '../../index';
 import { RATING_BAR_FACTOR } from '../../consts';
+import { getComments, getCurrentOffer, getIsDataLoaded, getNearPlaces } from '../../store/main-data/selectors';
+import { getAuthorizationStatus } from '../../store/user-data/services';
+import { CommentPost } from '../../types/comment-post';
 
 type Params = {
   id: string,
 }
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  onComment(review: CommentPost) {
-    dispatch(fetchReviewAction(review));
-  },
-});
-
-const mapStateToProps = ({ currentOffer, nearPlaces, comments, authorizationStatus, isDataLoaded }: State) => ({
-  currentOffer,
-  nearPlaces,
-  comments,
-  authorizationStatus,
-  isDataLoaded,
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-
-function OfferScreen(props: PropsFromRedux): JSX.Element {
-  const {currentOffer, nearPlaces, comments, authorizationStatus, isDataLoaded, onComment} = props;
+function OfferScreen(): JSX.Element {
+  const dispatch = useDispatch();
   const { id: currentId }: Params = useParams();
+  const currentOffer = useSelector(getCurrentOffer);
+  const isDataLoaded = useSelector(getIsDataLoaded);
+  const comments = useSelector(getComments);
+  const nearPlaces = useSelector(getNearPlaces);
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+
   const {isPremium, title, isFavorite, rating, type, bedrooms, maxAdults, price, goods, host, description, images} = currentOffer;
   const iconBookmark = isFavorite ? <use xlinkHref="#icon-bookmark" fill='#4481c3' stroke='#4481c3'></use> : <use xlinkHref="#icon-bookmark"fill='#ffffff' stroke='#b8b8b8'></use>;
   const cardClass = {
@@ -52,20 +39,29 @@ function OfferScreen(props: PropsFromRedux): JSX.Element {
 
   useEffect(() => {
     store.dispatch(requireDataUnload());
-    (store.dispatch as ThunkAppDispatch)(fetchCurrentOfferAction(+currentId))
+    store.dispatch(fetchCurrentOfferAction(+currentId))
       .then(() => {
-        (store.dispatch as ThunkAppDispatch)(fetchNearPlacesAction(+currentId));
-        (store.dispatch as ThunkAppDispatch)(fetchCommentsAction());
+        store.dispatch(fetchNearPlacesAction(+currentId));
+        store.dispatch(fetchCommentsAction());
       });
   }, [currentId]);
 
   if (!isDataLoaded) {
-    return <LoadingScreen/>;
+    return <Loading/>;
   }
 
   if (!('id' in currentOffer)) {
-    return <NotFoundScreen />;
+    return <NotFoundScreen/>;
   }
+
+  const onComment = (review: CommentPost) => {
+    dispatch(fetchReviewAction(review));
+  };
+
+  const onBookmarkClick = () => {
+    dispatch(fetchFavoritesAction(+currentId, isFavorite));
+    dispatch(fetchCurrentOfferAction(+currentId));
+  };
 
 
   return (
@@ -92,7 +88,7 @@ function OfferScreen(props: PropsFromRedux): JSX.Element {
                 <h1 className="property__name">
                   {title}
                 </h1>
-                <button className="property__bookmark-button button" type="button">
+                <button className="property__bookmark-button button" type="button" onClick={onBookmarkClick}>
                   <svg className="property__bookmark-icon" width="31" height="33">
                     {iconBookmark}
                   </svg>
@@ -154,6 +150,5 @@ function OfferScreen(props: PropsFromRedux): JSX.Element {
   );
 }
 
-export { OfferScreen };
-export default connector(OfferScreen);
+export default OfferScreen;
 

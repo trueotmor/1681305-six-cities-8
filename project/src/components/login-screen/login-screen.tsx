@@ -2,18 +2,13 @@ import Logo from '../logo/logo';
 import { useRef, FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAuthorizationStatus } from '../../store/user-data/services';
-import { AppRoute, AuthorizationStatus } from '../../consts';
-import { redirectToRoute } from '../../store/action';
+import { AuthorizationStatus } from '../../consts';
 import { loginAction } from '../../store/api-actions';
-// import { validateEmail } from '../../utils/utils';
+import Loading from '../loader/loader';
 
 function LoginScreen(): JSX.Element {
   const authorizationStatus = useSelector(getAuthorizationStatus);
   const dispatch = useDispatch();
-
-  if (authorizationStatus === AuthorizationStatus.Auth) {
-    dispatch(redirectToRoute(AppRoute.Main));
-  }
 
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
@@ -29,6 +24,12 @@ function LoginScreen(): JSX.Element {
       dispatch(loginAction(authData));
     }
   };
+
+  if (authorizationStatus === AuthorizationStatus.Unknown) {
+    return (
+      <Loading/>
+    );
+  }
 
   return (
     <div className="page page--gray page--login">

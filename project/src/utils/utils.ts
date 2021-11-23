@@ -84,14 +84,3 @@ export const getOffersByCity = (offers : Offers ,city  = 'Paris', sortType = 'Po
 
 export const isCheckedAuth = (authorizationStatus: AuthorizationStatus): boolean =>
   authorizationStatus === AuthorizationStatus.Unknown;
-
-// export const validateEmail = (inputValue: string): boolean => {
-//   const validRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-//   if (inputValue.match(validRegex)) {
-//     console.log("Valid email address!");
-//     return true;
-//   } else {
-//     console.log("Invalid email address!");
-//     return false;
-//   }
-// };

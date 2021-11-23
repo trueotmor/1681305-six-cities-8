@@ -5,13 +5,14 @@ import { getAuthorizationStatus } from '../../store/user-data/services';
 import { AppRoute, AuthorizationStatus } from '../../consts';
 import { redirectToRoute } from '../../store/action';
 import { loginAction } from '../../store/api-actions';
+// import { validateEmail } from '../../utils/utils';
 
 function LoginScreen(): JSX.Element {
   const authorizationStatus = useSelector(getAuthorizationStatus);
   const dispatch = useDispatch();
 
   if (authorizationStatus === AuthorizationStatus.Auth) {
-    dispatch(redirectToRoute(AppRoute.Favorites));
+    dispatch(redirectToRoute(AppRoute.Main));
   }
 
   const loginRef = useRef<HTMLInputElement | null>(null);

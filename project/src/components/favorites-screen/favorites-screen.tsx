@@ -81,7 +81,7 @@ function FavoritesScreen(): JSX.Element {
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
           {
-            favoritesOffers.length > 0
+            favoritesOffers.length
               ? <FavoritesListComponent favoritesOffers={favoritesOffers} favoritesCities={getFavoritesCities()}/>
               : <FavoritesEmptyComponent/>
           }

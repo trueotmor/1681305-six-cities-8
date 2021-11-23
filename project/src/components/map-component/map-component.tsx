@@ -1,20 +1,13 @@
-import {useRef, useEffect} from 'react';
-import {Icon, Marker} from 'leaflet';
-import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../consts';
+import { useRef, useEffect } from 'react';
+import L, {Icon, Marker} from 'leaflet';
+import { URL_MARKER_DEFAULT, URL_MARKER_CURRENT, DEFAULT_CITY } from '../../consts';
 import 'leaflet/dist/leaflet.css';
-import useMap from '../../hooks/useMap';
-
-import { connect, ConnectedProps } from 'react-redux';
-import { State } from '../../types/state';
-
-const mapStateToProps = ({offers, selectedID} : State) => ({
-  offers,
-  selectedID,
-});
-
-const connector = connect(mapStateToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
+import useMap from '../../hooks/use-map';
+import { useSelector } from 'react-redux';
+// import { getOffers } from '../../store/main-data/selectors';
+import { getSelectedOffer } from '../../store/main-process/selectors';
+import { Offers } from '../../types/offers';
+import { Offer } from '../../types/offer';
 
 const defaultCustomIcon = new Icon({
   iconUrl: URL_MARKER_DEFAULT,
@@ -28,15 +21,21 @@ const currentCustomIcon = new Icon({
   iconAnchor: [15, 40],
 });
 
-function Map (props : PropsFromRedux) : JSX.Element {
-  const { offers, selectedID } = props;
-  const [currentOffer] = offers;
-  const {city} = currentOffer;
+type MapProps = {
+  offers: Offers,
+  currentPoint?: Offer,
+}
 
-  const selectedPoint = selectedID;
+function Map (props : MapProps) : JSX.Element {
+  const {offers, currentPoint} = props;
+  const selectedID = useSelector(getSelectedOffer);
+
+  let city = {...DEFAULT_CITY};
+  if(offers.length) {city = offers[0].city;}
 
   const mapRef = useRef(null);
   const map = useMap({mapRef, city});
+  const offersCords = L.layerGroup();
 
   useEffect(() => {
     if (map) {
@@ -49,19 +48,30 @@ function Map (props : PropsFromRedux) : JSX.Element {
 
         marker
           .setIcon(
-            selectedPoint !== undefined && point.uniqueOfferID === selectedPoint
+            selectedID !== undefined && point.id === selectedID
               ? currentCustomIcon
               : defaultCustomIcon,
-          )
-          .addTo(map);
+          );
+        offersCords.addLayer(marker);
       });
-    }
-  },[map, offers, selectedPoint]);
 
+      if(currentPoint) {
+        const {location} = currentPoint;
+        const marker = new Marker({
+          lat: location.latitude,
+          lng: location.longitude,
+        });
+        marker
+          .setIcon(currentCustomIcon);
+        offersCords.addLayer(marker);
+      }
+      offersCords.addTo(map);
+    }
+    return () => { if (offersCords) { offersCords.clearLayers(); } };
+  },[map, offers, selectedID, offersCords, currentPoint]);
   return (
     <div style = {{height : '100%'}} ref={mapRef}></div>
   );
 }
 
-export { Map };
-export default connector( Map );
+export default Map;

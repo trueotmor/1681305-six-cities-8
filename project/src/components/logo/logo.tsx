@@ -1,21 +1,18 @@
-import {connect, ConnectedProps} from 'react-redux';
 import { Link } from 'react-router-dom';
-import { bindActionCreators, Dispatch } from 'redux';
-import { resetCity as resetCityState } from '../../store/action';
-import { Actions } from '../../types/action';
+import { AppRoute } from '../../consts';
+import { SortTypes } from '../../consts';
+import { CitiesNames } from '../../consts';
+import { fetchOffersAction } from '../../store/api-actions';
+import { selectCity, selectSortType } from '../../store/action';
+import { useDispatch } from 'react-redux';
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
-  onResetCity : resetCityState,
-}, dispatch);
-
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function Logo({onResetCity} : PropsFromRedux): JSX.Element {
+function Logo(): JSX.Element {
+  const dispatch = useDispatch();
   return (
-    <Link className='header__logo' to='/' onClick={()=>{
-      onResetCity();
+    <Link className='header__logo' to={AppRoute.Main} onClick={()=>{
+      dispatch(fetchOffersAction(CitiesNames.Paris, SortTypes.Popular));
+      dispatch(selectCity(CitiesNames.Paris));
+      dispatch(selectSortType(SortTypes.Popular));
     }}
     >
       <div className='header__logo-link'>
@@ -26,5 +23,4 @@ function Logo({onResetCity} : PropsFromRedux): JSX.Element {
   );
 }
 
-export { Logo };
-export default connector( Logo );
+export default Logo;

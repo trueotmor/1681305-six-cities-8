@@ -1,35 +1,25 @@
+import { Location } from './location';
+import { User } from './user';
+
 export type Offer = {
-  uniqueOfferID : string;
+  uniqueOfferID? : string;
   bedrooms : number;
   city : {
-    location : {
-      latitude : number;
-      longitude : number;
-      zoom : number;
-    };
+    location : Location;
     name : string;
   };
   description : string;
   goods : string[];
-  host : {
-    avatarUrl : string;
-    id : number;
-    isPro : boolean;
-    name : string;
-  };
+  host : User;
   id : number;
   images : string[];
   isFavorite : boolean;
   isPremium : boolean;
-  location : {
-    latitude : number;
-    longitude : number;
-    zoom : number;
-  };
+  location : Location;
   maxAdults : number;
   previewImage? : string;
   price : number;
   rating : number;
   title : string;
   type : string;
-};
+} | Record<string, never>;

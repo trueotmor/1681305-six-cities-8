@@ -1,35 +1,61 @@
-import { Offer } from '../types/offer';
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { AxiosInstance } from 'axios';
+import {
+  changeIsFavoriteStatus,
+  loadComments,
+  loadCurrentOffer,
+  loadFavoritesOffers,
+  loadNearPlaces,
+  loadOffers,
+  offersByCity,
+  redirectToRoute,
+  requireAuthorization,
+  requireDataUnload,
+  requireLogout,
+  selectCity,
+  selectOffer,
+  selectSortType,
+  setUserAuthInfo
+} from '../store/action';
+import { State } from './state';
 
 export enum ActionType {
   SelectCity = 'main/selectCity',
   OffersByCity = 'main/sortByCity',
-  ResetCity = 'main/resetCity',
   SelectOffer = 'main/selectOffer',
   SelectSortType = 'main/selectSortType',
+  RedirectToRoute = 'main/redirectToRoute',
+
+  LoadOffers = 'data/loadOffers',
+  LoadNearPlaces = 'data/loadNearPlaces',
+  LoadComments = 'data/loadComments',
+  LoadCurrentOffer = 'data/loadCurrentOffer',
+  LoadFavoritesOffers = 'data/loadFavoritesOffers',
+  ChangeIsFavoriteStatus = 'data/changeIsFavoriteStatus',
+  RequireDataUnload = 'data/requireDataUnload',
+
+  RequireAuthorization = 'user/requireAuthorization',
+  RequireLogout = 'user/requireLogout',
+  SetUserAuthInfo = 'user/setUserAuthInfo',
 }
 
-export type SelectCityAction = {
-  type : ActionType.SelectCity;
-  payload : string;
-}
+export type Actions =
+| ReturnType<typeof selectCity>
+| ReturnType<typeof offersByCity>
+| ReturnType<typeof selectOffer>
+| ReturnType<typeof selectSortType>
+| ReturnType<typeof loadOffers>
+| ReturnType<typeof loadNearPlaces>
+| ReturnType<typeof loadComments>
+| ReturnType<typeof loadCurrentOffer>
+| ReturnType<typeof requireDataUnload>
+| ReturnType<typeof requireAuthorization>
+| ReturnType<typeof requireLogout>
+| ReturnType<typeof redirectToRoute>
+| ReturnType<typeof setUserAuthInfo>
+| ReturnType<typeof changeIsFavoriteStatus>
+| ReturnType<typeof loadFavoritesOffers>
 
-export type OffersByCityAction = {
-  type : ActionType.OffersByCity;
-  payload : Offer[];
-}
+export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;
 
-export type ResetCityAction = {
-  type : ActionType.ResetCity;
-}
-
-export type SelectOfferAction = {
-  type : ActionType.SelectOffer;
-  payload : string;
-}
-
-export type SelectSortTypeAction = {
-  type : ActionType.SelectSortType;
-  payload : string;
-}
-
-export type Actions = SelectCityAction | OffersByCityAction | ResetCityAction | SelectOfferAction | SelectSortTypeAction;
+export type ThunkAppDispatch = ThunkDispatch<State, AxiosInstance, Actions>;

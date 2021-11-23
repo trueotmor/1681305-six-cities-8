@@ -1,6 +1,36 @@
 import Logo from '../logo/logo';
+import { useRef, FormEvent } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAuthorizationStatus } from '../../store/user-data/services';
+import { AuthorizationStatus } from '../../consts';
+import { loginAction } from '../../store/api-actions';
+import Loading from '../loader/loader';
 
-function MainScreen(): JSX.Element {
+function LoginScreen(): JSX.Element {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const dispatch = useDispatch();
+
+  const loginRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+
+    if (loginRef.current && passwordRef.current) {
+      const authData = {
+        email: loginRef.current.value,
+        password: passwordRef.current.value,
+      };
+      dispatch(loginAction(authData));
+    }
+  };
+
+  if (authorizationStatus === AuthorizationStatus.Unknown) {
+    return (
+      <Loading/>
+    );
+  }
+
   return (
     <div className="page page--gray page--login">
       <header className="header">
@@ -17,14 +47,34 @@ function MainScreen(): JSX.Element {
         <div className="page__login-container container">
           <section className="login">
             <h1 className="login__title">Sign in</h1>
-            <form className="login__form form" action="#" method="post" autoComplete="off">
+            <form
+              className="login__form form"
+              action=""
+              method="post"
+              autoComplete="off"
+              onSubmit={handleSubmit}
+            >
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
-                <input className="login__input form__input" type="email" name="email" placeholder="Email" required/>
+                <input
+                  ref={loginRef}
+                  className="login__input form__input"
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  required
+                />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">Password</label>
-                <input className="login__input form__input" type="password" name="password" placeholder="Password" required/>
+                <input
+                  ref={passwordRef}
+                  className="login__input form__input"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                />
               </div>
               <button className="login__submit form__submit button" type="submit">Sign in</button>
             </form>
@@ -42,4 +92,4 @@ function MainScreen(): JSX.Element {
   );
 }
 
-export default MainScreen;
+export default LoginScreen;

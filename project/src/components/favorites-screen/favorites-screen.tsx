@@ -1,53 +1,90 @@
 import FavoritesFooterComponent from './favorites-footer-component';
 import FavoritesItemComponent from './favorites-item';
 import HeaderComponent from '../header-component/header-component';
-import { Offer } from '../../types/offer';
+import { useDispatch, useSelector} from 'react-redux';
+import { Offers } from '../../types/offers';
+import { getFavoritesOffers, getIsDataLoaded } from '../../store/main-data/selectors';
+import { useEffect } from 'react';
+import { requireDataUnload } from '../../store/action';
+import { fetchFavoritesOffersAction } from '../../store/api-actions';
+import Loading from '../loader/loader';
 
-type FavoritesScreenProps = {
-  offers : Offer[];
+type FavoritesListComponentProps = {
+  favoritesOffers: Offers,
+  favoritesCities: string[],
 }
 
-function FavoritesScreen({offers} : FavoritesScreenProps): JSX.Element {
-  const getFavoritesOffers = () => {
-    const favorites : Offer[] = [];
-    offers.forEach((offer) => {
-      if (offer.isFavorite) {
-        favorites.push(offer);
-      }
-    });
-    return favorites;
+function FavoritesListComponent(props: FavoritesListComponentProps): JSX.Element {
+  const {favoritesOffers, favoritesCities} = props;
+  return (
+    <section className="favorites">
+      <h1 className="favorites__title">Saved listing</h1>
+      <ul className="favorites__list">
+        {[...favoritesCities].map((city, id) => {
+          const favoritesByCity : Offers = [];
+          favoritesOffers.forEach((offer)=>{
+            if (city === offer.city.name) {
+              favoritesByCity.push(offer);
+            }
+          });
+          const keyValue = `${id} - ${city}`;
+          return (
+            <FavoritesItemComponent key = {keyValue} offers = {favoritesByCity} city = {city}/>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
+function FavoritesEmptyComponent(): JSX.Element {
+  return (
+    <section className="favorites favorites--empty">
+      <h1 className="visually-hidden">Favorites (empty)</h1>
+      <div className="favorites__status-wrapper">
+        <b className="favorites__status">Nothing yet saved.</b>
+        <p className="favorites__status-description">Save properties to narrow down search or plan your future trips.</p>
+      </div>
+    </section>
+  );
+}
+
+function FavoritesScreen(): JSX.Element {
+  const dispatch = useDispatch();
+  const isDataLoaded = useSelector(getIsDataLoaded);
+  const favoritesOffers = useSelector(getFavoritesOffers);
+
+  const getFavoritesCities = () : string[] => {
+    if (favoritesOffers.length > 0) {
+      const favoritesCities : Set<string> = new Set();
+      favoritesOffers.forEach((offer)=>{
+        favoritesCities.add(offer.city.name);
+      });
+      return [...favoritesCities];
+    } else {
+      return [];
+    }
   };
 
-  const getFavoritesCities = () : Set<string> => {
-    const favoritesCitys : Set<string> = new Set();
-    getFavoritesOffers().forEach((offer)=>{
-      favoritesCitys.add(offer.city.name);
-    });
-    return favoritesCitys;
-  };
+  useEffect(() => {
+    dispatch(requireDataUnload());
+    dispatch(fetchFavoritesOffersAction());
+  }, [dispatch]);
+
+  if (!isDataLoaded) {
+    return <Loading/>;
+  }
 
   return (
     <div className="page">
       <HeaderComponent/>
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
-          <section className="favorites">
-            <h1 className="favorites__title">Saved listing</h1>
-            <ul className="favorites__list">
-              {[...getFavoritesCities()].map((city, id) => {
-                const favoritesByCity : Offer[] = [];
-                getFavoritesOffers().forEach((offer)=>{
-                  if (city === offer.city.name) {
-                    favoritesByCity.push(offer);
-                  }
-                });
-                const keyValue = `${id} - ${city}`;
-                return (
-                  <FavoritesItemComponent key = {keyValue} offers = {favoritesByCity} city = {city}/>
-                );
-              })}
-            </ul>
-          </section>
+          {
+            favoritesOffers.length
+              ? <FavoritesListComponent favoritesOffers={favoritesOffers} favoritesCities={getFavoritesCities()}/>
+              : <FavoritesEmptyComponent/>
+          }
         </div>
       </main>
       <FavoritesFooterComponent/>

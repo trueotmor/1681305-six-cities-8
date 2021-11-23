@@ -1,6 +1,6 @@
-import {MutableRefObject, useEffect, useState} from 'react';
-import {Map, TileLayer} from 'leaflet';
-import {Offer} from '../types/offer';
+import { MutableRefObject, useEffect, useState } from 'react';
+import { Map, TileLayer } from 'leaflet';
+import { Offer } from '../types/offer';
 
 type CityProps = Pick<Offer, 'city'>;
 
@@ -14,6 +14,7 @@ function useMap({mapRef, city} : useMapProps) : Map | null {
   const {latitude, longitude, zoom} = location;
 
   useEffect(() => {
+    map?.panTo({lat: latitude, lng: longitude});
     if (mapRef.current !== null && map === null) {
       const instance = new Map(mapRef.current, {
         center: {
@@ -21,6 +22,7 @@ function useMap({mapRef, city} : useMapProps) : Map | null {
           lng: longitude,
         },
         zoom: zoom,
+        scrollWheelZoom: false,
       });
 
       const layer = new TileLayer(
@@ -32,7 +34,6 @@ function useMap({mapRef, city} : useMapProps) : Map | null {
       );
 
       instance.addLayer(layer);
-
       setMap(instance);
     }
   }, [mapRef, map, city, latitude, longitude, zoom]);

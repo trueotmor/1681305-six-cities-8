@@ -1,26 +1,24 @@
-import { bindActionCreators, Dispatch } from 'redux';
-import { connect, ConnectedProps } from 'react-redux';
-import { State } from '../../types/state';
-import { Actions } from '../../types/action';
-import { selectCity, offersByCity } from '../../store/action';
-import { CITIES } from '../../consts';
+import { useDispatch, useSelector } from 'react-redux';
+import { CitiesNames, SortTypes } from '../../consts';
 import classNames from 'classnames';
+import { fetchOffersAction } from '../../store/api-actions';
+import { selectCity } from '../../store/action';
+import { getCity } from '../../store/main-data/selectors';
 
-const mapStateToProps = ({city} : State) => ({
-  city,
-});
+function enumKeys<E>(e: E): (keyof E)[] {
+  return Object.keys(e) as (keyof E)[];
+}
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => bindActionCreators({
-  onCitySelect : selectCity,
-  onCitySelectGetOffers : offersByCity,
-}, dispatch);
+const CITIES: string[] = [];
+for (const key of enumKeys(CitiesNames)) {
+  const CityName: string = CitiesNames[key];
+  CITIES.push(CityName);
+}
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+function MainTabsComponent(): JSX.Element {
+  const dispatch = useDispatch();
+  const city = useSelector(getCity);
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function MainTabsComponent(props : PropsFromRedux): JSX.Element {
-  const {onCitySelect, onCitySelectGetOffers, city} = props;
   return (
     <div className="tabs">
       <section className="locations container">
@@ -31,8 +29,8 @@ function MainTabsComponent(props : PropsFromRedux): JSX.Element {
             return (
               <li className="locations__item" key={keyValue} onClick={(event)=>{
                 event.preventDefault();
-                onCitySelect(place);
-                onCitySelectGetOffers(place, 'Popular');
+                dispatch(fetchOffersAction(place, SortTypes.Popular));
+                dispatch(selectCity(place));
               }}
               >
                 <a className={cityClass} href="/">
@@ -47,5 +45,4 @@ function MainTabsComponent(props : PropsFromRedux): JSX.Element {
   );
 }
 
-export { MainTabsComponent };
-export default connector( MainTabsComponent );
+export default MainTabsComponent;

@@ -5,23 +5,28 @@ import { useDispatch } from 'react-redux';
 import { selectOffer } from '../../store/action';
 import { AppRoute, RATING_BAR_FACTOR } from '../../consts';
 import { fetchFavoritesAction, fetchFavoritesOffersAction, fetchNearPlacesAction } from '../../store/api-actions';
+import { store } from '../..';
 
 type PlaceCardProps = {
   offer : Offer,
   cardClass : CardClassProps,
+  screen?: string,
 }
 
 function CardComponent(props : PlaceCardProps): JSX.Element {
-  const {offer, cardClass} = props;
+  const {offer, cardClass, screen} = props;
   const dispatch = useDispatch();
   const {isPremium, price, title, type, previewImage, isFavorite, rating, id} = offer;
   const {articleClass, imageWrapperClass, cardInfoClass, imageSize} = cardClass;
   const iconBookmark = isFavorite ? <use xlinkHref="#icon-bookmark" fill='#4481c3' stroke='#4481c3'></use> : <use xlinkHref="#icon-bookmark" fill='#ffffff' stroke='#b8b8b8'></use>;
 
   const onBookmarkClick = () => {
-    dispatch(fetchFavoritesAction(id, isFavorite));
-    dispatch(fetchFavoritesOffersAction());
-    if (AppRoute.Room) {
+    store.dispatch(fetchFavoritesAction(id, isFavorite))
+      .then(()=>{
+        store.dispatch(fetchFavoritesOffersAction());
+      });
+
+    if (screen === AppRoute.Room) {
       dispatch(fetchNearPlacesAction(id));
     }
   };

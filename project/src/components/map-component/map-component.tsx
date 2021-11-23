@@ -4,8 +4,10 @@ import { URL_MARKER_DEFAULT, URL_MARKER_CURRENT, DEFAULT_CITY } from '../../cons
 import 'leaflet/dist/leaflet.css';
 import useMap from '../../hooks/use-map';
 import { useSelector } from 'react-redux';
-import { getOffers } from '../../store/main-data/selectors';
+// import { getOffers } from '../../store/main-data/selectors';
 import { getSelectedOffer } from '../../store/main-process/selectors';
+import { Offers } from '../../types/offers';
+import { Offer } from '../../types/offer';
 
 const defaultCustomIcon = new Icon({
   iconUrl: URL_MARKER_DEFAULT,
@@ -19,8 +21,13 @@ const currentCustomIcon = new Icon({
   iconAnchor: [15, 40],
 });
 
-function Map () : JSX.Element {
-  const offers = useSelector(getOffers);
+type MapProps = {
+  offers: Offers,
+  currentPoint?: Offer,
+}
+
+function Map (props : MapProps) : JSX.Element {
+  const {offers, currentPoint} = props;
   const selectedID = useSelector(getSelectedOffer);
 
   let city = {...DEFAULT_CITY};
@@ -47,10 +54,21 @@ function Map () : JSX.Element {
           );
         offersCords.addLayer(marker);
       });
+
+      if(currentPoint) {
+        const {location} = currentPoint;
+        const marker = new Marker({
+          lat: location.latitude,
+          lng: location.longitude,
+        });
+        marker
+          .setIcon(currentCustomIcon);
+        offersCords.addLayer(marker);
+      }
       offersCords.addTo(map);
     }
     return () => { if (offersCords) { offersCords.clearLayers(); } };
-  },[map, offers, selectedID, offersCords]);
+  },[map, offers, selectedID, offersCords, currentPoint]);
   return (
     <div style = {{height : '100%'}} ref={mapRef}></div>
   );

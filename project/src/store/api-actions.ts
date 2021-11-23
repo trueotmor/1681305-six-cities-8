@@ -39,11 +39,13 @@ export const fetchOffersAction = (city: string, sortType: string): ThunkActionRe
 export const checkAuthAction = (): ThunkActionResult =>
   async (dispatch, _getState, api) => {
     await api.get(APIRoute.Login)
-      .then(() => {
+      .then(({data}) => {
         dispatch(requireAuthorization(AuthorizationStatus.Auth));
+        dispatch(setUserAuthInfo(camelcaseKeys(data, {deep: true})));
       })
       .catch((error) => {
         dispatch(requireLogout());
+        dispatch(setUserAuthInfo({}));
       });
   };
 
@@ -53,8 +55,8 @@ export const loginAction = ({email, password}: AuthData): ThunkActionResult =>
     const {data} = await api.post<AuthInfo>(APIRoute.Login, {email, password});
     saveToken(data.token);
     dispatch(requireAuthorization(AuthorizationStatus.Auth));
+    dispatch(setUserAuthInfo(camelcaseKeys(data, {deep: true})));
     dispatch(redirectToRoute(AppRoute.Main));
-    dispatch(setUserAuthInfo(data));
   };
 
 export const logoutAction = (): ThunkActionResult =>

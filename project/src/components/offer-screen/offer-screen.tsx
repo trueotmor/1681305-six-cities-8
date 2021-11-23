@@ -11,7 +11,7 @@ import NotFoundScreen from '../not-found-screen/not-found-screen';
 import { useEffect } from 'react';
 import { requireDataUnload } from '../../store/action';
 import { store } from '../../index';
-import { RATING_BAR_FACTOR } from '../../consts';
+import { AppRoute, RATING_BAR_FACTOR } from '../../consts';
 import { getComments, getCurrentOffer, getIsDataLoaded, getNearPlaces } from '../../store/main-data/selectors';
 import { getAuthorizationStatus } from '../../store/user-data/services';
 import { CommentPost } from '../../types/comment-post';
@@ -59,8 +59,10 @@ function OfferScreen(): JSX.Element {
   };
 
   const onBookmarkClick = () => {
-    dispatch(fetchFavoritesAction(+currentId, isFavorite));
-    dispatch(fetchCurrentOfferAction(+currentId));
+    store.dispatch(fetchFavoritesAction(+currentId, isFavorite))
+      .then(()=>{
+        dispatch(fetchCurrentOfferAction(+currentId));
+      });
   };
 
 
@@ -132,7 +134,7 @@ function OfferScreen(): JSX.Element {
             </div>
           </div>
           <section className="property__map map">
-            <Map/>
+            <Map offers = {nearPlaces} currentPoint = {currentOffer}/>
           </section>
         </section>
         <div className="container">
@@ -140,7 +142,7 @@ function OfferScreen(): JSX.Element {
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
             <div className="near-places__list places__list">
               { nearPlaces.map((item) => (
-                <CardComponent key={item.id} offer={item} cardClass={cardClass}/>
+                <CardComponent key={item.id} offer={item} cardClass={cardClass} screen={AppRoute.Room}/>
               ))}
             </div>
           </section>

@@ -12,7 +12,7 @@ type ReviewsComponentProps = {
 }
 
 function ReviewsComponent({reviews, onComment, auth}: ReviewsComponentProps): JSX.Element {
-  const sortedReviews = [...reviews].slice(0, 10).sort((b, a) => {
+  const sortedReviews = [...reviews].sort((b, a) => {
     if (a.date > b.date) {
       return 1;
     }
@@ -20,7 +20,7 @@ function ReviewsComponent({reviews, onComment, auth}: ReviewsComponentProps): JS
       return -1;
     }
     return 0;
-  });
+  }).slice(0, 10);
 
   return (
     <section className="property__reviews reviews">

@@ -1,4 +1,4 @@
-import styles from '../loader/loader.module.scss';
+import styles from '../loading/loading.module.scss';
 import Loader from 'react-loader-spinner';
 function Loading(): JSX.Element {
   return (

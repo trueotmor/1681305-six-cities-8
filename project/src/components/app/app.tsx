@@ -9,7 +9,7 @@ import PrivateRoute from '../private-route/private-route';
 import browserHistory from '../../browser-history';
 import { useSelector } from 'react-redux';
 import { getAuthorizationStatus } from '../../store/user-data/services';
-import Loading from '../loader/loader';
+import Loading from '../loading/loading';
 
 function App(): JSX.Element {
   const authorizationStatus = useSelector(getAuthorizationStatus);

@@ -26,13 +26,13 @@ import { getCurrentOffer } from './main-data/selectors';
 import { getAuthorizationStatus } from './user-data/services';
 import { OfferFromServer } from '../types/offer-from-server';
 
-const adaptedOffers = (data: Offers) => data.map((offer) => camelcaseKeys(offer, {deep: true}));
-const adaptedComments = (data: CommentsGet) => data.map((comment) => camelcaseKeys(comment, {deep: true}));
+const getAdaptedOffers = (data: Offers) => data.map((offer) => camelcaseKeys(offer, {deep: true}));
+const getAdaptedComments = (data: CommentsGet) => data.map((comment) => camelcaseKeys(comment, {deep: true}));
 
 export const fetchOffersAction = (city: string, sortType: string): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const {data} = await api.get<Offers>(APIRoute.Hotels);
-    const offers = adaptedOffers(data);
+    const offers = getAdaptedOffers(data);
     dispatch(loadOffers({offers, city, sortType}));
   };
 
@@ -84,27 +84,27 @@ export const fetchCurrentOfferAction = (id: number): ThunkActionResult =>
 export const fetchNearPlacesAction = (id: number): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const {data} = await api.get<Offers>(`${APIRoute.Hotels}/${id}${APIRoute.Nearby}`);
-    dispatch(loadNearPlaces(adaptedOffers(data)));
+    dispatch(loadNearPlaces(getAdaptedOffers(data)));
   };
 
 export const fetchCommentsAction = (): ThunkActionResult =>
   async (dispatch, getState, api): Promise<void> => {
     const objectId = getCurrentOffer(getState()).id;
     const {data} = await api.get<CommentsGet>(`${APIRoute.Comments}/${objectId}`);
-    dispatch(loadComments(adaptedComments(data)));
+    dispatch(loadComments(getAdaptedComments(data)));
   };
 
 export const fetchReviewAction = (review: CommentPost): ThunkActionResult =>
   async (dispatch, getState, api) => {
     const objectId = getCurrentOffer(getState()).id;
     const {data} = await api.post<CommentsGet>(`${APIRoute.Comments}/${objectId}`, review);
-    dispatch(loadComments(adaptedComments(data)));
+    dispatch(loadComments(getAdaptedComments(data)));
   };
 
 export const fetchFavoritesOffersAction = (): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
     const {data} = await api.get<Offers>(APIRoute.Favorite);
-    dispatch(loadFavoritesOffers(adaptedOffers(data)));
+    dispatch(loadFavoritesOffers(getAdaptedOffers(data)));
   };
 
 export const fetchFavoritesAction = (objectId: number, wasFavorite: boolean): ThunkActionResult =>

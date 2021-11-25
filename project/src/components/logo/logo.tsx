@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../consts';
-import { SortTypes } from '../../consts';
-import { CitiesNames } from '../../consts';
+import { SortType } from '../../consts';
+import { CityName } from '../../consts';
 import { fetchOffersAction } from '../../store/api-actions';
 import { selectCity, selectSortType } from '../../store/action';
 import { useDispatch } from 'react-redux';
@@ -10,9 +10,9 @@ function Logo(): JSX.Element {
   const dispatch = useDispatch();
   return (
     <Link className='header__logo' to={AppRoute.Main} onClick={()=>{
-      dispatch(fetchOffersAction(CitiesNames.Paris, SortTypes.Popular));
-      dispatch(selectCity(CitiesNames.Paris));
-      dispatch(selectSortType(SortTypes.Popular));
+      dispatch(fetchOffersAction(CityName.Paris, SortType.Popular));
+      dispatch(selectCity(CityName.Paris));
+      dispatch(selectSortType(SortType.Popular));
     }}
     >
       <div className='header__logo-link'>

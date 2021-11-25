@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import App from './components/app/app';
 import { requireAuthorization } from './store/action';
 import { fetchOffersAction, checkAuthAction } from './store/api-actions';
-import { AuthorizationStatus, CitiesNames, SortTypes } from './consts';
+import { AuthorizationStatus, CityName, SortType } from './consts';
 import { redirect } from './store/middlewares/redirect';
 import { configureStore } from '@reduxjs/toolkit';
 import { rootReducer } from './store/root-reducer';
@@ -26,7 +26,7 @@ export const store = configureStore({
 });
 
 store.dispatch(checkAuthAction());
-store.dispatch(fetchOffersAction(CitiesNames.Paris, SortTypes.Popular));
+store.dispatch(fetchOffersAction(CityName.Paris, SortType.Popular));
 
 ReactDOM.render(
   <React.StrictMode>

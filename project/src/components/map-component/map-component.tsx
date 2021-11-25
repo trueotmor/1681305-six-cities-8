@@ -4,7 +4,6 @@ import { URL_MARKER_DEFAULT, URL_MARKER_CURRENT, DEFAULT_CITY } from '../../cons
 import 'leaflet/dist/leaflet.css';
 import useMap from '../../hooks/use-map';
 import { useSelector } from 'react-redux';
-// import { getOffers } from '../../store/main-data/selectors';
 import { getSelectedOffer } from '../../store/main-process/selectors';
 import { Offers } from '../../types/offers';
 import { Offer } from '../../types/offer';
@@ -26,7 +25,7 @@ type MapProps = {
   currentPoint?: Offer,
 }
 
-function Map (props : MapProps) : JSX.Element {
+function MapComponent (props : MapProps) : JSX.Element {
   const {offers, currentPoint} = props;
   const selectedID = useSelector(getSelectedOffer);
 
@@ -48,7 +47,7 @@ function Map (props : MapProps) : JSX.Element {
 
         marker
           .setIcon(
-            selectedID !== undefined && point.id === selectedID
+            selectedID !== undefined && point.id === selectedID && !currentPoint
               ? currentCustomIcon
               : defaultCustomIcon,
           );
@@ -74,4 +73,4 @@ function Map (props : MapProps) : JSX.Element {
   );
 }
 
-export default Map;
+export default MapComponent;

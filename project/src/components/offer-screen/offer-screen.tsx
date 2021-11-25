@@ -2,16 +2,16 @@ import HeaderComponent from '../header-component/header-component';
 import HostComponent from './host-component';
 import ReviewsComponent from '../reviews-component/reviews-component';
 import CardComponent from '../card-component/card-component';
-import Map from '../map-component/map-component';
+import MapComponent from '../map-component/map-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCommentsAction, fetchCurrentOfferAction, fetchFavoritesAction, fetchNearPlacesAction, fetchReviewAction } from '../../store/api-actions';
 import { useParams } from 'react-router';
-import Loading from '../loader/loader';
+import Loading from '../loading/loading';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 import { useEffect } from 'react';
 import { requireDataUnload } from '../../store/action';
 import { store } from '../../index';
-import { AppRoute, RATING_BAR_FACTOR } from '../../consts';
+import { AppRoute, OFFER_SCREEN_IMAGES_MAX_INDEX, OFFER_SCREEN_IMAGES_START_INDEX, RATING_BAR_FACTOR } from '../../consts';
 import { getComments, getCurrentOffer, getIsDataLoaded, getNearPlaces } from '../../store/main-data/selectors';
 import { getAuthorizationStatus } from '../../store/user-data/services';
 import { CommentPost } from '../../types/comment-post';
@@ -73,7 +73,7 @@ function OfferScreen(): JSX.Element {
         <section className="property">
           <div className="property__gallery-container container">
             <div className="property__gallery">
-              {images.map((image, id) => {
+              {images.slice(OFFER_SCREEN_IMAGES_START_INDEX, OFFER_SCREEN_IMAGES_MAX_INDEX).map((image, id) => {
                 const keyValue = `${id} - ${image}`;
                 return (
                   <div key={keyValue} className="property__image-wrapper">
@@ -134,7 +134,7 @@ function OfferScreen(): JSX.Element {
             </div>
           </div>
           <section className="property__map map">
-            <Map offers = {nearPlaces} currentPoint = {currentOffer}/>
+            <MapComponent offers = {nearPlaces} currentPoint = {currentOffer}/>
           </section>
         </section>
         <div className="container">

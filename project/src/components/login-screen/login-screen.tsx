@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAuthorizationStatus } from '../../store/user-data/services';
 import { AuthorizationStatus } from '../../consts';
 import { loginAction } from '../../store/api-actions';
-import Loading from '../loader/loader';
+import Loading from '../loading/loading';
 
 function LoginScreen(): JSX.Element {
   const authorizationStatus = useSelector(getAuthorizationStatus);

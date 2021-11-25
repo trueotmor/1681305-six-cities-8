@@ -5,9 +5,9 @@ import { mainProcess } from './main-process/main-process';
 import { userData } from './user-data/user-data';
 
 export const rootReducer = combineReducers({
-  [NameSpace.user]: userData,
-  [NameSpace.data]: mainData,
-  [NameSpace.main]: mainProcess,
+  [NameSpace.User]: userData,
+  [NameSpace.Data]: mainData,
+  [NameSpace.Main]: mainProcess,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

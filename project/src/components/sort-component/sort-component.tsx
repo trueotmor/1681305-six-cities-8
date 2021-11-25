@@ -1,21 +1,13 @@
-import { SortTypes } from '../../consts';
+import { SortType } from '../../consts';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCity, getOffers, getSort } from '../../store/main-data/selectors';
 import { loadOffers, selectSortType } from '../../store/action';
-
-function enumKeys<E>(e: E): (keyof E)[] {
-  return Object.keys(e) as (keyof E)[];
-}
-
-const SORT_TYPES: string[] = [];
-for (const key of enumKeys(SortTypes)) {
-  const SortType: string = SortTypes[key];
-  SORT_TYPES.push(SortType);
-}
+import { getArrayFromEnum } from '../../utils/utils';
 
 function SortComponent(): JSX.Element {
+  const sortTypes = getArrayFromEnum(SortType);
   const dispatch = useDispatch();
   const [menuState, setMenuState] = useState(false);
   const menuClass = classNames('places__options places__options--custom', {'places__options--opened' : menuState});
@@ -42,7 +34,7 @@ function SortComponent(): JSX.Element {
       </span>
       <ul className = {menuClass}>
         {
-          SORT_TYPES.map((sortType, id) => {
+          sortTypes.map((sortType, id) => {
             const placeOptionClass = classNames('places__option', {'places__option--active': selectedSortType === sortType});
             const keyValue = `${sortType}-${id}`;
             return (

@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { CitiesNames, SortTypes } from '../../consts';
+import { CityName, SortType } from '../../consts';
 import { MainData } from '../../types/state';
 import { getOffersByCity } from '../../utils/utils';
 import {
@@ -22,8 +22,8 @@ const initialState: MainData = {
   comments: [],
   isDataLoaded: false,
   favoritesOffers: [],
-  city: CitiesNames.Paris,
-  selectedSortType: SortTypes.Popular,
+  city: CityName.Paris,
+  selectedSortType: SortType.Popular,
 };
 
 const mainData = createReducer(initialState, (builder) => {

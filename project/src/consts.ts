@@ -9,6 +9,9 @@ export const URL_MARKER_CURRENT = '../img/pin-active.svg';
 export const COMMENT_MAX_LENGTH = 300;
 export const COMMENT_MIN_LENGTH = 50;
 
+export const OFFER_SCREEN_IMAGES_MAX_INDEX = 6;
+export const OFFER_SCREEN_IMAGES_START_INDEX = 0;
+
 export const ERROR_404 = 404;
 
 export enum AppRoute {
@@ -33,7 +36,7 @@ export enum APIRoute {
   Nearby = '/nearby',
 }
 
-export enum CitiesNames {
+export enum CityName {
   Paris = 'Paris',
   Cologne = 'Cologne',
   Brussels = 'Brussels',
@@ -42,7 +45,7 @@ export enum CitiesNames {
   Dusseldorf = 'Dusseldorf'
 }
 
-export enum SortTypes {
+export enum SortType {
   Popular = 'Popular',
   PriceLowToHight = 'Price: low to high',
   PriceHightToLow = 'Price: high to low',
@@ -55,11 +58,11 @@ export const DEFAULT_CITY = {
     longitude: 2.349014,
     zoom: 13,
   },
-  name: CitiesNames.Paris.toString(),
+  name: CityName.Paris.toString(),
 };
 
 export enum NameSpace {
-  user = 'USER',
-  data = 'DATA',
-  main = 'MAIN',
+  User = 'USER',
+  Data = 'DATA',
+  Main = 'MAIN',
 }

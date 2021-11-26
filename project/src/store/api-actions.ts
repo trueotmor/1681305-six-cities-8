@@ -109,6 +109,7 @@ export const fetchReviewAction = (review: CommentPost): ThunkActionResult =>
       dispatch(setStatus(FetchStatus.Fetching));
       const {data} = await api.post<CommentsGet>(`${APIRoute.Comments}/${objectId}`, review);
       dispatch(loadComments(getAdaptedComments(data)));
+      dispatch(setStatus(FetchStatus.Fetched));
     }
     catch {
       dispatch(setStatus(FetchStatus.Error));

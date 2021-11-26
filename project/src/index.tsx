@@ -9,6 +9,8 @@ import { AuthorizationStatus, CityName, SortType } from './consts';
 import { redirect } from './store/middlewares/redirect';
 import { configureStore } from '@reduxjs/toolkit';
 import { rootReducer } from './store/root-reducer';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const api = createAPI(
   () => store.dispatch(requireAuthorization(AuthorizationStatus.NoAuth)),
@@ -31,6 +33,7 @@ store.dispatch(fetchOffersAction(CityName.Paris, SortType.Popular));
 ReactDOM.render(
   <React.StrictMode>
     <Provider store = {store}>
+      <ToastContainer/>
       <App/>
     </Provider>
   </React.StrictMode>,

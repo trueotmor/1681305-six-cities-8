@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent } from 'react';
+import { ChangeEvent, FormEvent, useEffect } from 'react';
 import StarsInputComponent from './stars-input-component';
 import { STARS, COMMENT_MAX_LENGTH, COMMENT_MIN_LENGTH, FetchStatus } from '../../consts';
 import { CommentPost } from '../../types/comment-post';
@@ -10,16 +10,20 @@ import { getStatus } from '../../store/main-data/selectors';
 function NewReviewComponent(): JSX.Element {
   const [review, handleStarsChange, handleCommentChange, handleResetForm] = useReview();
   const currentFetchStatus = useSelector(getStatus);
-  const disabled = COMMENT_MAX_LENGTH < review.comment.length || review.comment.length < COMMENT_MIN_LENGTH || review.rating === 0 || currentFetchStatus===FetchStatus.Fetching;
+  const canSubmit = COMMENT_MAX_LENGTH < review.comment.length || review.comment.length < COMMENT_MIN_LENGTH || review.rating === 0 || currentFetchStatus===FetchStatus.Fetching;
   const dispatch = useDispatch();
 
   const onComment = (comment: CommentPost) => {
     dispatch(fetchReviewAction(comment));
-    currentFetchStatus===FetchStatus.Fetched && handleResetForm();
   };
+
+  useEffect(() => {
+    currentFetchStatus === FetchStatus.Fetched && handleResetForm();
+  }, [currentFetchStatus]);
 
   const onChange = ({target} : ChangeEvent<HTMLInputElement>) => {
     handleStarsChange(target.value);};
+
   return (
     <form className="reviews__form form" action="#" method="post"
       onSubmit={(evt: FormEvent<HTMLFormElement>) => {
@@ -57,7 +61,7 @@ function NewReviewComponent(): JSX.Element {
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled = {disabled}>Submit</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled = {canSubmit}>Submit</button>
       </div>
     </form>
   );

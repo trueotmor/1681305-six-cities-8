@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import { CommentPost } from '../types/comment-post';
 
 type ResultReview = [CommentPost, (value: string) => void, (value: string) => void, () => void];
@@ -14,9 +14,9 @@ export const useReview = (): ResultReview => {
     setReview({...review, comment: value});
   };
 
-  const handleResetForm = () => {
+  const handleResetForm = useCallback(() => {
     setReview({ rating: 0, comment: '' });
-  };
+  }, []);
 
   return [review, handleStarsChange, handleCommentChange, handleResetForm];
 };

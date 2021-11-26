@@ -19,7 +19,7 @@ function NewReviewComponent(): JSX.Element {
 
   useEffect(() => {
     currentFetchStatus === FetchStatus.Fetched && handleResetForm();
-  }, [currentFetchStatus]);
+  }, [currentFetchStatus, handleResetForm]);
 
   const onChange = ({target} : ChangeEvent<HTMLInputElement>) => {
     handleStarsChange(target.value);};

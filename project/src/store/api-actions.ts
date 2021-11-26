@@ -1,4 +1,4 @@
-import { APIRoute, AppRoute, AuthorizationStatus } from '../consts';
+import { APIRoute, AppRoute, AuthorizationStatus, ERROR_MESSAGE, FetchStatus } from '../consts';
 import { saveToken, dropToken } from '../services/token';
 import { ThunkActionResult } from '../types/action';
 import { Offer } from '../types/offer';
@@ -15,7 +15,8 @@ import {
   loadComments,
   setUserAuthInfo,
   changeIsFavoriteStatus,
-  loadFavoritesOffers
+  loadFavoritesOffers,
+  setStatus
 } from './action';
 
 import camelcaseKeys from 'camelcase-keys';
@@ -25,15 +26,22 @@ import { CommentPost } from '../types/comment-post';
 import { getCurrentOffer } from './main-data/selectors';
 import { getAuthorizationStatus } from './user-data/services';
 import { OfferFromServer } from '../types/offer-from-server';
+import { toast } from 'react-toastify';
+
 
 const getAdaptedOffers = (data: Offers) => data.map((offer) => camelcaseKeys(offer, {deep: true}));
 const getAdaptedComments = (data: CommentsGet) => data.map((comment) => camelcaseKeys(comment, {deep: true}));
 
 export const fetchOffersAction = (city: string, sortType: string): ThunkActionResult =>
   async (dispatch, _getState, api): Promise<void> => {
-    const {data} = await api.get<Offers>(APIRoute.Hotels);
-    const offers = getAdaptedOffers(data);
-    dispatch(loadOffers({offers, city, sortType}));
+    try {
+      const {data} = await api.get<Offers>(APIRoute.Hotels);
+      const offers = getAdaptedOffers(data);
+      dispatch(loadOffers({offers, city, sortType}));
+    }
+    catch {
+      toast.error(ERROR_MESSAGE);
+    }
   };
 
 export const checkAuthAction = (): ThunkActionResult =>
@@ -97,8 +105,15 @@ export const fetchCommentsAction = (): ThunkActionResult =>
 export const fetchReviewAction = (review: CommentPost): ThunkActionResult =>
   async (dispatch, getState, api) => {
     const objectId = getCurrentOffer(getState()).id;
-    const {data} = await api.post<CommentsGet>(`${APIRoute.Comments}/${objectId}`, review);
-    dispatch(loadComments(getAdaptedComments(data)));
+    try {
+      dispatch(setStatus(FetchStatus.Fetching));
+      const {data} = await api.post<CommentsGet>(`${APIRoute.Comments}/${objectId}`, review);
+      dispatch(loadComments(getAdaptedComments(data)));
+    }
+    catch {
+      dispatch(setStatus(FetchStatus.Error));
+      toast.error(ERROR_MESSAGE);
+    }
   };
 
 export const fetchFavoritesOffersAction = (): ThunkActionResult =>

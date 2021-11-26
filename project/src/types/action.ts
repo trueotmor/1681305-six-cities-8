@@ -15,6 +15,7 @@ import {
   selectCity,
   selectOffer,
   selectSortType,
+  setStatus,
   setUserAuthInfo
 } from '../store/action';
 import { State } from './state';
@@ -33,6 +34,7 @@ export enum ActionType {
   LoadFavoritesOffers = 'data/loadFavoritesOffers',
   ChangeIsFavoriteStatus = 'data/changeIsFavoriteStatus',
   RequireDataUnload = 'data/requireDataUnload',
+  SetStatus = 'data/setStatus',
 
   RequireAuthorization = 'user/requireAuthorization',
   RequireLogout = 'user/requireLogout',
@@ -55,5 +57,6 @@ export type Actions =
 | ReturnType<typeof setUserAuthInfo>
 | ReturnType<typeof changeIsFavoriteStatus>
 | ReturnType<typeof loadFavoritesOffers>
+| ReturnType<typeof setStatus>
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<R, State, AxiosInstance, Actions>;

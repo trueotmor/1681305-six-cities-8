@@ -45,6 +45,12 @@ export enum CityName {
   Dusseldorf = 'Dusseldorf'
 }
 
+export enum FetchStatus {
+  Fetched = 'Fetched',
+  Fetching = 'Fetching',
+  Error = 'Error',
+}
+
 export enum SortType {
   Popular = 'Popular',
   PriceLowToHight = 'Price: low to high',
@@ -66,3 +72,5 @@ export enum NameSpace {
   Data = 'DATA',
   Main = 'MAIN',
 }
+
+export const ERROR_MESSAGE = 'We have a little problem. Please try again later';

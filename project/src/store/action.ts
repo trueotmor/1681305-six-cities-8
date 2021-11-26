@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { AppRoute, AuthorizationStatus } from '../consts';
+import { AppRoute, AuthorizationStatus, FetchStatus } from '../consts';
 import { ActionType } from '../types/action';
 import { AuthInfo } from '../types/auth-info';
 import { CommentsGet } from '../types/comment-get';
@@ -21,3 +21,4 @@ export const redirectToRoute = createAction<AppRoute>(ActionType.RedirectToRoute
 export const setUserAuthInfo = createAction<AuthInfo | Record<string, never>>(ActionType.SetUserAuthInfo);
 export const loadFavoritesOffers = createAction<Offers>(ActionType.LoadFavoritesOffers);
 export const changeIsFavoriteStatus = createAction<{id: number, isFavorite: boolean}>(ActionType.ChangeIsFavoriteStatus);
+export const setStatus = createAction<FetchStatus>(ActionType.SetStatus);

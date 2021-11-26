@@ -1,4 +1,4 @@
-import { AuthorizationStatus } from '../consts';
+import { AuthorizationStatus, FetchStatus } from '../consts';
 import { AuthInfo } from './auth-info';
 import { CommentsGet } from './comment-get';
 import { Offer } from './offer';
@@ -21,6 +21,7 @@ export type MainData = {
   isDataLoaded: boolean,
   city: string | undefined,
   selectedSortType: string | undefined,
+  status: FetchStatus,
 }
 
 export type MainProcess = {

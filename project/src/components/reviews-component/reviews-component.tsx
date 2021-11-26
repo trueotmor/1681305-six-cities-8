@@ -1,17 +1,15 @@
 import { AuthorizationStatus } from '../../consts';
 import { CommentsGet } from '../../types/comment-get';
-import { CommentPost } from '../../types/comment-post';
 import NewReviewComponent from './new-review-component';
 import ReviewComponent from './review-component';
 
 
 type ReviewsComponentProps = {
   reviews : CommentsGet,
-  onComment : (review: CommentPost)=> void,
   auth: string,
 }
 
-function ReviewsComponent({reviews, onComment, auth}: ReviewsComponentProps): JSX.Element {
+function ReviewsComponent({reviews, auth}: ReviewsComponentProps): JSX.Element {
   const sortedReviews = [...reviews].sort((b, a) => {
     if (a.date > b.date) {
       return 1;
@@ -32,7 +30,7 @@ function ReviewsComponent({reviews, onComment, auth}: ReviewsComponentProps): JS
         })}
       </ul>
       {
-        auth===AuthorizationStatus.Auth && <NewReviewComponent onComment = {onComment}/>
+        auth===AuthorizationStatus.Auth && <NewReviewComponent/>
       }
     </section>
   );

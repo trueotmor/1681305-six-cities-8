@@ -1,12 +1,14 @@
 import { ChangeEventHandler } from 'react';
+import { FetchStatus } from '../../consts';
 
 type StarsInputComponentProps = {
-  count : number;
-  checked : boolean;
-  onChange : ChangeEventHandler<HTMLInputElement>;
+  count : number,
+  checked : boolean,
+  onChange : ChangeEventHandler<HTMLInputElement>,
+  currentFetchStatus: FetchStatus,
 }
 
-function StarsInputComponent({count, checked, onChange} : StarsInputComponentProps): JSX.Element {
+function StarsInputComponent({count, checked, onChange, currentFetchStatus} : StarsInputComponentProps): JSX.Element {
   return (
     <>
       <input className="form__rating-input visually-hidden"
@@ -16,6 +18,7 @@ function StarsInputComponent({count, checked, onChange} : StarsInputComponentPro
         type="radio"
         checked={checked}
         onChange={onChange}
+        disabled={currentFetchStatus===FetchStatus.Fetching}
       />
       <label htmlFor={`${count}-stars`} className="reviews__rating-label form__rating-label" title="perfect">
         <svg className="form__star-image" width="37" height="33">

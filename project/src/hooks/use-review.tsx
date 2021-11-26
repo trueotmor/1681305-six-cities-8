@@ -20,3 +20,4 @@ export const useReview = (): ResultReview => {
 
   return [review, handleStarsChange, handleCommentChange, handleResetForm];
 };
+

@@ -1,4 +1,4 @@
-import { NameSpace } from '../../consts';
+import { FetchStatus, NameSpace } from '../../consts';
 import { CommentsGet } from '../../types/comment-get';
 import { Offer } from '../../types/offer';
 import { Offers } from '../../types/offers';
@@ -13,3 +13,5 @@ export const getIsDataLoaded = (state: State): boolean => state[NameSpace.Data].
 export const getFavoritesOffers = (state: State): Offers => state[NameSpace.Data].favoritesOffers;
 export const getCity = (state: State): string | undefined => state[NameSpace.Data].city;
 export const getSort = (state: State): string | undefined => state[NameSpace.Data].selectedSortType;
+export const getStatus = (state: State): FetchStatus => state[NameSpace.Data].status;
+

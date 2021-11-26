@@ -1,16 +1,23 @@
 import { ChangeEvent, FormEvent } from 'react';
 import StarsInputComponent from './stars-input-component';
-import { STARS, COMMENT_MAX_LENGTH, COMMENT_MIN_LENGTH } from '../../consts';
+import { STARS, COMMENT_MAX_LENGTH, COMMENT_MIN_LENGTH, FetchStatus } from '../../consts';
 import { CommentPost } from '../../types/comment-post';
 import { useReview } from '../../hooks/use-review';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchReviewAction } from '../../store/api-actions';
+import { getStatus } from '../../store/main-data/selectors';
 
-type NewReviewComponentProps = {
-  onComment : (review: CommentPost)=> void;
-}
-
-function NewReviewComponent({onComment}:NewReviewComponentProps): JSX.Element {
+function NewReviewComponent(): JSX.Element {
   const [review, handleStarsChange, handleCommentChange, handleResetForm] = useReview();
-  const disabled = COMMENT_MAX_LENGTH < review.comment.length || review.comment.length < COMMENT_MIN_LENGTH || review.rating === 0;
+  const currentFetchStatus = useSelector(getStatus);
+  const disabled = COMMENT_MAX_LENGTH < review.comment.length || review.comment.length < COMMENT_MIN_LENGTH || review.rating === 0 || currentFetchStatus===FetchStatus.Fetching;
+  const dispatch = useDispatch();
+
+  const onComment = (comment: CommentPost) => {
+    dispatch(fetchReviewAction(comment));
+    currentFetchStatus===FetchStatus.Fetched && handleResetForm();
+  };
+
   const onChange = ({target} : ChangeEvent<HTMLInputElement>) => {
     handleStarsChange(target.value);};
   return (
@@ -18,7 +25,6 @@ function NewReviewComponent({onComment}:NewReviewComponentProps): JSX.Element {
       onSubmit={(evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault();
         onComment(review);
-        handleResetForm();
       }}
     >
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
@@ -27,7 +33,7 @@ function NewReviewComponent({onComment}:NewReviewComponentProps): JSX.Element {
           const keyValue = `${id}-${id}`;
           const checked = review.rating === STARS - id;
           return (
-            <StarsInputComponent key = {keyValue} count = {STARS - id} checked = {checked} onChange = {onChange}/>
+            <StarsInputComponent key = {keyValue} count = {STARS - id} checked = {checked} onChange = {onChange} currentFetchStatus={currentFetchStatus}/>
           );
         })}
       </div>
@@ -44,6 +50,7 @@ function NewReviewComponent({onComment}:NewReviewComponentProps): JSX.Element {
           handleCommentChange(value);
 
         }}
+        disabled={currentFetchStatus===FetchStatus.Fetching}
       >
       </textarea>
       <div className="reviews__button-wrapper">

@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { CityName, SortType } from '../../consts';
+import { CityName, FetchStatus, SortType } from '../../consts';
 import { MainData } from '../../types/state';
 import { getOffersByCity } from '../../utils/utils';
 import {
@@ -12,7 +12,8 @@ import {
   offersByCity,
   requireDataUnload,
   selectCity,
-  selectSortType
+  selectSortType,
+  setStatus
 } from '../action';
 
 const initialState: MainData = {
@@ -24,6 +25,7 @@ const initialState: MainData = {
   favoritesOffers: [],
   city: CityName.Paris,
   selectedSortType: SortType.Popular,
+  status : FetchStatus.Fetched,
 };
 
 const mainData = createReducer(initialState, (builder) => {
@@ -64,6 +66,9 @@ const mainData = createReducer(initialState, (builder) => {
     })
     .addCase(selectSortType, (state, action) => {
       state.selectedSortType = action.payload;
+    })
+    .addCase(setStatus, (state, action) => {
+      state.status = action.payload;
     });
 });
 

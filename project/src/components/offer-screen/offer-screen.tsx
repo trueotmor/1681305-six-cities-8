@@ -4,7 +4,7 @@ import ReviewsComponent from '../reviews-component/reviews-component';
 import CardComponent from '../card-component/card-component';
 import MapComponent from '../map-component/map-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCommentsAction, fetchCurrentOfferAction, fetchFavoritesAction, fetchNearPlacesAction, fetchReviewAction } from '../../store/api-actions';
+import { fetchCommentsAction, fetchCurrentOfferAction, fetchFavoritesAction, fetchNearPlacesAction } from '../../store/api-actions';
 import { useParams } from 'react-router';
 import Loading from '../loading/loading';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
@@ -14,7 +14,6 @@ import { store } from '../../index';
 import { AppRoute, OFFER_SCREEN_IMAGES_MAX_INDEX, OFFER_SCREEN_IMAGES_START_INDEX, RATING_BAR_FACTOR } from '../../consts';
 import { getComments, getCurrentOffer, getIsDataLoaded, getNearPlaces } from '../../store/main-data/selectors';
 import { getAuthorizationStatus } from '../../store/user-data/services';
-import { CommentPost } from '../../types/comment-post';
 
 type Params = {
   id: string,
@@ -53,10 +52,6 @@ function OfferScreen(): JSX.Element {
   if (!('id' in currentOffer)) {
     return <NotFoundScreen/>;
   }
-
-  const onComment = (review: CommentPost) => {
-    dispatch(fetchReviewAction(review));
-  };
 
   const onBookmarkClick = () => {
     store.dispatch(fetchFavoritesAction(+currentId, isFavorite))
@@ -130,7 +125,7 @@ function OfferScreen(): JSX.Element {
                 </ul>
               </div>
               <HostComponent host = {host} description = {description}/>
-              <ReviewsComponent reviews = {comments} onComment = {onComment} auth = {authorizationStatus}/>
+              <ReviewsComponent reviews = {comments} auth = {authorizationStatus}/>
             </div>
           </div>
           <section className="property__map map">
